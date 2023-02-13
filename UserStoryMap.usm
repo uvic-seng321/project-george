@@ -4,35 +4,43 @@
 #release4: Release 4 (WONT) 
 
 Upload a Post 
-    Upload a Photo
-        User Story 11 |{"bg":"#D3F8E2"}
-    Add Location
+    Take a photo using the app
+        User Story 1 |{"bg":"#D3F8E2"}
+
+    Upload a photo to the app
+        User Story 6 |{"bg":"#D3F8E2"}
+
+    Upload a Location
         User Story 6 |{"bg":"#D3F8E2"}
             
-    Add Time, Date, and Tags
-         |{"bg":"#D3F8E2"}
-               |{"bg":"#D3F8E2"}
+    Add Post Metadata
+        N/A|{"bg":"#D3F8E2"}
+            User Story 10 |{"bg":"#D3F8E2"}
                 User Story 7 |{"bg":"#D3F8E2"}
 
 Browse Photos
     Open Browsing
         User Story 8 |{"bg":"#D3F8E2"}
-            User Story 9 |{"bg":"#D3F8E2"}
+    Apply Tag Filters
+        N/A|{"bg":"#D3F8E2"}
+            User Story 10 |{"bg":"#D3F8E2"}
     Apply Location Filters
-        User Story 1 |{"bg":"#D3F8E2"}
-    Apply Filters
-        User Story 10 |{"bg":"#D3F8E2"}
+        N/A|{"bg":"#D3F8E2"}
+            User Story 3 |{"bg":"#D3F8E2"}
 
 Browse Map
     Open Map
-        User Story 3 |{"bg":"#D3F8E2"}
+        N/A|{"bg":"#D3F8E2"}
+            N/A|{"bg":"#D3F8E2"}
+                User Story 9 |{"bg":"#D3F8E2"}
     Pan to Desired Location
-        User Story 2 |{"bg":"#D3F8E2"}
-    Apply Filters
+        N/A|{"bg":"#D3F8E2"}
+            N/A|{"bg":"#D3F8E2"}
+                User Story 2 |{"bg":"#D3F8E2"}
 
 Access Posts Externally 
     GET Request
-        User Story 5 |{"bg":"#D3F8E2"}
-            User Story 4 |{"bg":"#D3F8E2","fg":"#000000"}
-    Process Data 
-    POST Request
+        N/A|{"bg":"#D3F8E2"}
+            N/A|{"bg":"#D3F8E2"}
+                User Story 4 |{"bg":"#D3F8E2","fg":"#000000"}
+                    User Story 5 |{"bg":"#D3F8E2"}

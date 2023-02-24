@@ -1,6 +1,6 @@
-the_watering_hole/android/* linguist-detectable=false
-the_watering_hole/ios/* linguist-detectable=false
-the_watering_hole/linux/* linguist-detectable=false
-the_watering_hole/macos/* linguist-detectable=false
-the_watering_hole/web/* linguist-detectable=false
-the_watering_hole/windows/* linguist-detectable=false
+the_watering_hole/android/** linguist-detectable=false
+the_watering_hole/ios/** linguist-detectable=false
+the_watering_hole/linux/** linguist-detectable=false
+the_watering_hole/macos/** linguist-detectable=false
+the_watering_hole/web/** linguist-detectable=false
+the_watering_hole/windows/** linguist-detectable=false

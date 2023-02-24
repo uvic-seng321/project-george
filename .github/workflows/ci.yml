@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Flutter actions taken from https://github.com/subosito/flutter-action
+jobs:
+  build-android:
+    name: Run Flutter build and tests on Android
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./the_watering_hole
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.0.5'
+    - run: flutter pub get
+    - run: flutter test
+    - run: flutter build apk
+    - run: flutter build appbundle
+
+  build-ios:
+    name: Run Flutter build and tests on iOS
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./the_watering_hole
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        architecture: x64
+    - run: flutter pub get
+    - run: flutter test
+    - run: flutter build ios --release --no-codesign

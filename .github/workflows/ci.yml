@@ -10,6 +10,21 @@ on:
 
 # Flutter actions taken from https://github.com/subosito/flutter-action
 jobs:
+  api:
+    name: Test the Flask API
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./the_watering_hole/api
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.x'
+      - run: python -m pip install --upgrade pip
+      - run: pip install -r requirements.txt
+      - run: python -m pytest
+
   build-android:
     name: Run Flutter build and tests on Android
     runs-on: ubuntu-latest

@@ -1,12 +1,12 @@
-import time
 from flask import Flask, request, jsonify
-from get_articles import *
 
 app = Flask(__name__)
+# TODO add option for prod config
+app.config.from_object('config.DevConfig')
 
 @app.route('/', methods=['GET'])
 def home():
-    return ""
+    return "hello test"
 
 @app.route('/getPosts', methods=['GET'])
 def get_posts():

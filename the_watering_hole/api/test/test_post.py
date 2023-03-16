@@ -1,21 +1,33 @@
-import os
-import flaskr
+# TODO database stuff from https://tedboy.github.io/flask/flask_doc.testing.html
+import pytest
+from api import app
 import unittest
-import tempfile
 
-# TODO copy/pasted from https://tedboy.github.io/flask/flask_doc.testing.html
-class FlaskrTestCase(unittest.TestCase):
+def test_home():
+    cnt = app.get('/')
+    assert cnt == "Welcome to The Watering Hole's api!"
 
-    def setUp(self):
-        self.db_fd, flaskr.app.config['DATABASE'] = tempfile.mkstemp()
-        flaskr.app.config['TESTING'] = True
-        self.app = flaskr.app.test_client()
-        with flaskr.app.app_context():
-            flaskr.init_db()
+def test_empty_posts():
+    cnt = app.get('/getPosts')
+    assert cnt == ""
 
-    def tearDown(self):
-        os.close(self.db_fd)
-        os.unlink(flaskr.app.config['DATABASE'])
+# class TestPost(unittest.TestCase):
+#     def test_empty_posts(self):
+#         cnt = self.get('/getPosts').data
+#         assert cnt == ""
 
-if __name__ == '__main__':
-    unittest.main()
+#     @pytest.fixture()
+#     def app():
+#         app = api.app
+#         app.config.update({
+#             "TESTING": True,
+#         })
+
+#         # other setup can go here
+
+#         yield app
+
+#         # clean up / reset resources here
+
+# if __name__ == '__main__':
+#     unittest.main()

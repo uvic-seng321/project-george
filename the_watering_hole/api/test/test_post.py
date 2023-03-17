@@ -1,33 +1,38 @@
-# TODO database stuff from https://tedboy.github.io/flask/flask_doc.testing.html
+from flask import Flask
 import pytest
-from api import app
-import unittest
 
-def test_home():
-    cnt = app.get('/')
-    assert cnt == "Welcome to The Watering Hole's api!"
+from constants import *
 
-def test_empty_posts():
-    cnt = app.get('/getPosts')
-    assert cnt == ""
+@pytest.fixture()
+def test_image():
+    '''Read peacock.png from test_images'''
+    with open('test/test_images/peacock.png', 'rb') as f:
+        image = f.read()
+    yield image
 
-# class TestPost(unittest.TestCase):
-#     def test_empty_posts(self):
-#         cnt = self.get('/getPosts').data
-#         assert cnt == ""
+def default_upload_json():
+    return {'latitude': -1, 'longitude': -1, 'user': 1, 'tags': ["A", "B"]}
 
-#     @pytest.fixture()
-#     def app():
-#         app = api.app
-#         app.config.update({
-#             "TESTING": True,
-#         })
+def test_upload_post(client: Flask, test_image):
+    '''Test that the uploadPost endpoint successfully uploads a post and returns 200'''
 
-#         # other setup can go here
+    # Create a post with simple data for testing.
+    request_json = {'latitude': -1, 'longitude': -1, 'user': 1, 'tags': ["A", "B"]}
+    response = client.post('/uploadPost', data = dict(image = test_image, json = request_json))
 
-#         yield app
+    # Check that the post was uploaded successfully
+    assert response.status_code == 200
 
-#         # clean up / reset resources here
+def test_invalid_location(client: Flask, test_image):
+    '''Test that the getPosts endpoint returns an error when given an invalid location'''
+    # Create a post with an invalid location
+    failing_json = default_upload_json()
+    failing_json['latitude'] = 91
+    failing_json['longitude'] = 181
+    response = client.post('/uploadPost', data = dict(image = test_image, json = failing_json))
+    assert response.text == INVALID_LOCATION and response.status_code == 400
 
-# if __name__ == '__main__':
-#     unittest.main()
+def test_no_radius(client: Flask):
+    '''Test that the getPosts endpoint returns an error when given a location but no radius'''
+    response = client.post()
+    assert response.text == NO_RADIUS_GIVEN and response.status_code == 400

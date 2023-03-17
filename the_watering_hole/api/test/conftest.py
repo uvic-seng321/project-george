@@ -7,7 +7,6 @@ from api import app as flask_app
 def app():
     flask_app.testing = True
     flask_app.config.from_object('config.DevConfig')
-    # TODO initialize database for integration testing
     yield flask_app
 
 @pytest.fixture()
@@ -15,8 +14,9 @@ def client(app : Flask):
     return app.test_client()
 
 @pytest.fixture()
-def db(app : Flask):
-    return db()
+def db():
+    # TODO yield database
+    return
 
 @pytest.fixture()
 def runner(app : Flask):

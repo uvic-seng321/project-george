@@ -12,6 +12,7 @@ on:
 jobs:
   api:
     name: Test the Flask API
+    environment: test
     runs-on: ubuntu-latest
     defaults:
       run:

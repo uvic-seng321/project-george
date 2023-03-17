@@ -10,15 +10,30 @@ def test_image():
         image = f.read()
     yield image
 
-def default_upload_json():
-    return {'latitude': -1, 'longitude': -1, 'user': 1, 'tags': ["A", "B"]}
+def upload_url(user : int = 1, 
+               lat : float = None, 
+               long : float = None, 
+               radius : float = None, 
+               tags = []):
+    '''Create a url for the uploadPost endpoint'''
+
+    req = "/uploadPost?"
+    req += "user=" + str(user) 
+    if lat is not None:
+        req += "&latitude=" + str(lat)
+    if long is not None:
+        req += "&longitude=" + str(long)
+    if radius is not None:
+        req += "&radius=" + str(radius)
+    req += "".join(["&tags=" + tag for tag in tags])
+    return req
 
 def test_upload_post(client: Flask, test_image):
     '''Test that the uploadPost endpoint successfully uploads a post and returns 200'''
 
     # Create a post with simple data for testing.
-    request_json = {'latitude': -1, 'longitude': -1, 'user': 1, 'tags': ["A", "B"]}
-    response = client.post('/uploadPost', data = dict(image = test_image, json = request_json))
+    url = upload_url(latitude=91, longitude=181, tags = ["A", "B"])
+    response = client.post(url, data = test_image)
 
     # Check that the post was uploaded successfully
     assert response.status_code == 200
@@ -26,10 +41,8 @@ def test_upload_post(client: Flask, test_image):
 def test_invalid_location(client: Flask, test_image):
     '''Test that the getPosts endpoint returns an error when given an invalid location'''
     # Create a post with an invalid location
-    failing_json = default_upload_json()
-    failing_json['latitude'] = 91
-    failing_json['longitude'] = 181
-    response = client.post('/uploadPost', data = dict(image = test_image, json = failing_json))
+    url = upload_url(latitude=91, longitude=181, tags = ["A", "B"])
+    response = client.post(url, data = test_image)
     assert response.text == INVALID_LOCATION and response.status_code == 400
 
 def test_no_radius(client: Flask):

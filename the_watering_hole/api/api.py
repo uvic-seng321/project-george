@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
 
+from constants import *
+
 app = Flask(__name__)
-app.config.from_object('config.Config')
+app.config.from_object('config.ProdConfig')
 
 db = MySQL(app)
 
@@ -12,25 +14,15 @@ def home():
 
 @app.route('/getPosts', methods=['GET'])
 def get_posts():
-    # TODO this is just a test to see if this works. implement this
-    args = request.args
-    if "latitude" in args and "longitude" in args and "radius" not in args:
-        return "ERROR: radius not specified given a longitude and latitude", 400
-    cursor = db.connection.cursor()
-    cursor.execute("SELECT * FROM Posts;")
-    posts = cursor.fetchall()
-    db.connection.commit()
-    cursor.close()
-    return jsonify(posts)
+    # TODO implement this
+    return "", 400
 
+# Syntax for uploadPost is:
+# CALL `george`.`uploadPost`('URL', LONG (float), LAT (float), USER (int), 'TAGS:SEPARATED:BY:COLONS:ENDING:IN:ENDLIST');")
 @app.route('/uploadPost', methods=['POST'])
 def upload_post():
-    # TODO implement this. this is the syntax for calling a stored procedure for uploading the post to the database
-    # cursor = db.connection.cursor()
-    # cursor.execute("CALL `george`.`uploadPost`('test URL', -1, -1, -1, 'EX:GEEB:THREE:ENDLIST');")
-    # db.connection.commit()
-    # cursor.close()
-    return "", 200
+    # TODO implement this
+    return "", 400
 
 @app.route('/removePost', methods=['DELETE'])
 def remove_post():

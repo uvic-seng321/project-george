@@ -32,7 +32,7 @@ def test_upload_post(client: Flask, test_image):
     '''Test that the uploadPost endpoint successfully uploads a post and returns 200'''
 
     # Create a post with simple data for testing.
-    url = upload_url(latitude=91, longitude=181, tags = ["A", "B"])
+    url = upload_url(lat=91, long=181, tags = ["A", "B"])
     response = client.post(url, data = test_image)
 
     # Check that the post was uploaded successfully
@@ -41,7 +41,7 @@ def test_upload_post(client: Flask, test_image):
 def test_invalid_location(client: Flask, test_image):
     '''Test that the getPosts endpoint returns an error when given an invalid location'''
     # Create a post with an invalid location
-    url = upload_url(latitude=91, longitude=181, tags = ["A", "B"])
+    url = upload_url(lat=91, long=181, tags = ["A", "B"])
     response = client.post(url, data = test_image)
     assert response.text == INVALID_LOCATION and response.status_code == 400
 

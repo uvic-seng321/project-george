@@ -3,14 +3,14 @@ import os
 import uuid
 
 from constants import *
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from flask_mysqldb import MySQL
 from PIL import Image
 
 app = Flask(__name__)
+db = MySQL(app)
 app.config.from_object('config.ProdConfig')
 
-db = MySQL(app)
 
 @app.route('/', methods=['GET'])
 def home():

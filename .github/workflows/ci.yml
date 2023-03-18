@@ -12,6 +12,12 @@ on:
 jobs:
   api:
     name: Test the Flask API
+    environment: test
+    env:
+      MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      DEV_DATABASE: ${{ secrets.DEV_DATABASE }}
     runs-on: ubuntu-latest
     defaults:
       run:

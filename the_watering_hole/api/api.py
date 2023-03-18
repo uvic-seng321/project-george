@@ -1,10 +1,15 @@
-from flask import Flask, request, jsonify
+import io
+import os
+import uuid
+
+from constants import *
+from flask import Flask, jsonify, request
 from flask_mysqldb import MySQL
+from PIL import Image
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
-
 db = MySQL(app)
+app.config.from_object('config.ProdConfig')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -12,25 +17,50 @@ def home():
 
 @app.route('/getPosts', methods=['GET'])
 def get_posts():
-    # TODO this is just a test to see if this works. implement this
-    args = request.args
-    if "latitude" in args and "longitude" in args and "radius" not in args:
-        return "ERROR: radius not specified given a longitude and latitude", 400
-    cursor = db.connection.cursor()
-    cursor.execute("SELECT * FROM Posts;")
-    posts = cursor.fetchall()
-    db.connection.commit()
-    cursor.close()
-    return jsonify(posts)
+    # TODO implement this
+    return "", 400
 
 @app.route('/uploadPost', methods=['POST'])
 def upload_post():
-    # TODO implement this. this is the syntax for calling a stored procedure for uploading the post to the database
-    # cursor = db.connection.cursor()
-    # cursor.execute("CALL `george`.`uploadPost`('test URL', -1, -1, -1, 'EX:GEEB:THREE:ENDLIST');")
-    # db.connection.commit()
-    # cursor.close()
+    '''
+    Upload a post to the database
+
+    Syntax for uploadPost is:
+
+    CALL `database_name`.`uploadPost`('URL', LONG (float), LAT (float), USER (int), 'TAGS:SEPARATED:BY:COLONS:ENDING:IN:ENDLIST');")
+    '''
+    # Grab the arguments provided in the request
+    tags = request.args.getlist('tags')
+    user = request.args.get('user')
+    latitude = request.args.get('latitude', None)
+    longitude = request.args.get('longitude', None)
+    radius = request.args.get('radius', None)
+
+    # Ensure the latitude, longitude, and radius are specified correctly
+    if latitude is not None and longitude is not None:
+        if (float(latitude) < -90 or
+            float(latitude) > 90 or
+            float(longitude) < -180 or
+                float(longitude) > 180):
+            return INVALID_LOCATION, 400
+        if radius is None:
+            return NO_RADIUS_GIVEN, 400
+        
+    # Upload image to the storage folder
+    image = Image.open(io.BytesIO(request.data))
+    image_path = str(uuid.uuid4()) + ".png"
+    # TODO use a constant or environment variable for the storage folder
+    image.save(fp = os.environ["IMAGE_DIR"] + "/" + image_path, format = "png")
+    # Send the post to the database using the uploadPost stored procedure
+    tags = ":".join(tags) + ":ENDLIST"
+    cur = db.connection.cursor()
+    db_name = app.config.get("MYSQL_DB")
+    # TODO use db_name
+    cmd = f"CALL `george`.`uploadPost`('{image_path}', {longitude}, {latitude}, {user}, '{tags}');"
+    cur.execute(cmd)
+    cur.close()
     return "", 200
+
 
 @app.route('/removePost', methods=['DELETE'])
 def remove_post():

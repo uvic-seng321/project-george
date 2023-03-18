@@ -45,8 +45,7 @@ def upload_post():
     tags = ":".join(tags) + ":ENDLIST"
     cmd_params = (image_path, latitude, longitude, user, tags)
     cur = db.connection.cursor()
-    database = os.getenv("MYSQL_DB")
-    cur.callproc(f"{database}.uploadPost", cmd_params)
+    cur.callproc("george.uploadPost", cmd_params)
     cur.fetchall()
     cur.close()
     db.connection.commit()

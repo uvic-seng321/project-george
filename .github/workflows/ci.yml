@@ -10,13 +10,15 @@ on:
 
 # Flutter actions taken from https://github.com/subosito/flutter-action
 jobs:
-  codecov:
-    name: Upload coverage reports to Codecov
-    runs-on: ubuntu-latest
-    steps:
-      - uses: codecov/codecov-action@v3
   api:
     name: Test the Flask API
+    environment: test
+    env:
+      MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_DB: ${{ secrets.MYSQL_DB }}
+      DEV_DATABASE: ${{ secrets.DEV_DATABASE }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -28,7 +30,10 @@ jobs:
           python-version: '3.10.x'
       - run: python -m pip install --upgrade pip
       - run: pip install -r requirements.txt
-      - run: python -m pytest
+      - run: python -m pytest --cov=api --cov-report=xml test/
+      - uses: actions/upload-artifact@v2
+        with:
+          path: coverage.xml
 
 #   build-android:
 #     name: Run Flutter build and tests on Android

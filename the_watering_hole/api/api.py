@@ -1,8 +1,14 @@
-from flask import Flask, request, jsonify
+import io
+import os
+import uuid
+
+from constants import *
+from flask import Flask, request
 from flask_mysqldb import MySQL
+from PIL import Image
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
+app.config.from_object('config.ProdConfig')
 
 db = MySQL(app)
 
@@ -12,37 +18,50 @@ def home():
 
 @app.route('/getPosts', methods=['GET'])
 def get_posts():
-    # TODO this is just a test to see if this works. implement this
-    args = request.args
-    if "latitude" in args and "longitude" in args and "radius" not in args:
-        return "ERROR: radius not specified given a longitude and latitude", 400
-    cursor = db.connection.cursor()
-    cursor.execute("SELECT * FROM Posts;")
-    posts = cursor.fetchall()
-    db.connection.commit()
-    cursor.close()
-    return jsonify(posts)
+    return "Unimplemented", 400
 
 @app.route('/uploadPost', methods=['POST'])
 def upload_post():
-    # TODO implement this. this is the syntax for calling a stored procedure for uploading the post to the database
-    # cursor = db.connection.cursor()
-    # cursor.execute("CALL `george`.`uploadPost`('test URL', -1, -1, -1, 'EX:GEEB:THREE:ENDLIST');")
-    # db.connection.commit()
-    # cursor.close()
+    '''Upload a post to the database and store the image in the file system'''
+    # Grab the arguments provided in the request
+    tags = request.args.getlist('tags')
+    user = request.args.get('user')
+    latitude = request.args.get('latitude')
+    longitude = request.args.get('longitude')
+
+    # Ensure the latitude and longitude are specified correctly
+    if (float(latitude) < -90 or
+        float(latitude) > 90 or
+        float(longitude) < -180 or
+            float(longitude) > 180):
+        return INVALID_LOCATION, 400
+        
+    # Upload image to the storage folder
+    image = Image.open(io.BytesIO(request.data))
+    image_path = str(uuid.uuid4()) + ".png"
+    image.save(fp = os.environ["IMAGE_DIR"] + "/" + image_path, format = "png")
+
+    # Send the post to the database using the uploadPost stored procedure
+    tags = ":".join(tags) + ":ENDLIST"
+    cmd_params = (image_path, latitude, longitude, user, tags)
+    cur = db.connection.cursor()
+    cur.callproc("george.uploadPost", cmd_params)
+    cur.fetchall()
+    cur.close()
+    db.connection.commit()
     return "", 200
 
 @app.route('/removePost', methods=['DELETE'])
 def remove_post():
-    return ""
+    return "Unimplemented", 400
 
 @app.route('/viewPost', methods=['PATCH'])
 def view_post():
-    return ""
+    return "Unimplemented", 400
 
 @app.route('/updatePost', methods=['PATCH'])
 def update_post():
-    return ""
+    return "Unimplemented", 400
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3434)

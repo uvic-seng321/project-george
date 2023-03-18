@@ -1,0 +1,22 @@
+name: CodeCov
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  codecov-flask:
+    name: Run CodeCov on Flask API
+    defaults:
+      run:
+        working-directory: ./the_watering_hole/api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v2
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+  # TODO set up codecov-flutter once the app is developed

@@ -5,7 +5,6 @@ import os
 
 @pytest.fixture()
 def app():
-    os.environ["MYSQL_DB"] = os.getenv("DEV_DATABASE")
     yield api.app
 
 @pytest.fixture()

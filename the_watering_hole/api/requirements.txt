@@ -12,6 +12,7 @@ Jinja2==3.1.2
 MarkupSafe==2.1.2
 mysqlclient==2.1.1
 packaging==23.0
+Pillow==9.4.0
 pluggy==1.0.0
 PyMySQL==1.0.2
 pytest==7.2.2
@@ -21,5 +22,6 @@ testing.common.database==2.0.3
 testing.mysqld==1.4.0
 tomli==2.0.1
 typing_extensions==4.5.0
+uuid==1.30
 Werkzeug==2.2.3
 zipp==3.15.0

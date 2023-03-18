@@ -5,19 +5,16 @@ import os
 
 @pytest.fixture()
 def app():
+    os.environ["MYSQL_DB"] = os.getenv("DEV_DATABASE")
     yield api.app
 
 @pytest.fixture()
 def client(app : Flask):
     return app.test_client()
 
-@pytest.fixture()
-def runner(app : Flask):
-    return app.test_cli_runner()
-
 @pytest.fixture(scope="session")
 def temp_dir(tmp_path_factory):
     dir = str(tmp_path_factory.mktemp("image_files"))
+    # Set the image directory to a temp dir, used in the uploadPost endpoint
     os.environ["IMAGE_DIR"] = dir
     return dir
-# TODO database

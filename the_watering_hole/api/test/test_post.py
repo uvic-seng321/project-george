@@ -14,20 +14,15 @@ def test_image():
     yield image
 
 def upload_url(user : int = 1, 
-               lat : float = None, 
-               long : float = None, 
-               radius : float = None, 
+               lat : float = 1, 
+               long : float = 1, 
                tags = []):
     '''Create a url for the uploadPost endpoint'''
 
     req = "/uploadPost?"
     req += "user=" + str(user) 
-    if lat is not None:
-        req += "&latitude=" + str(lat)
-    if long is not None:
-        req += "&longitude=" + str(long)
-    if radius is not None:
-        req += "&radius=" + str(radius)
+    req += "&latitude=" + str(lat)
+    req += "&longitude=" + str(long)
     req += "".join(["&tags=" + tag for tag in tags])
     return req
 
@@ -35,7 +30,7 @@ def test_upload_post(client: Flask, test_image, temp_dir):
     '''Test that the uploadPost endpoint successfully uploads a post and returns 200'''
 
     # Create a post with simple data for testing.
-    url = upload_url(lat=1, long=1, radius=1, tags = ["A", "B"])
+    url = upload_url(tags = ["A", "B"])
     response = client.post(url, data=test_image)
 
     # Check that the post was uploaded successfully
@@ -50,13 +45,8 @@ def test_upload_post(client: Flask, test_image, temp_dir):
 
 def test_invalid_location(client: Flask, test_image):
     '''Test that the getPosts endpoint returns an error when given an invalid location'''
+
     # Create a post with an invalid location
-    url = upload_url(lat=91, long=181, radius=1, tags = ["A", "B"])
+    url = upload_url(lat=91, long=181, tags = ["A", "B"])
     response = client.post(url, data=test_image)
     assert response.text == INVALID_LOCATION and response.status_code == 400, "uploadPost should return 400 when given an invalid location"
-
-def test_no_radius(client: Flask, test_image):
-    '''Test that the getPosts endpoint returns an error when given a location but no radius'''
-    url = upload_url(lat=1, long=1, tags = ["A", "B"])
-    response = client.post(url, data=test_image)
-    assert response.text == NO_RADIUS_GIVEN and response.status_code == 400, "uploadPost should return 400 when given a location but no radius"

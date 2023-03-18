@@ -8,9 +8,9 @@ from flask_mysqldb import MySQL
 from PIL import Image
 
 app = Flask(__name__)
-db = MySQL(app)
 app.config.from_object('config.ProdConfig')
 
+db = MySQL(app)
 
 @app.route('/', methods=['GET'])
 def home():

@@ -17,6 +17,7 @@ jobs:
       MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
       MYSQL_USER: ${{ secrets.MYSQL_USER }}
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      MYSQL_DB: ${{ secrets.MYSQL_DB }}
       DEV_DATABASE: ${{ secrets.DEV_DATABASE }}
     runs-on: ubuntu-latest
     defaults:

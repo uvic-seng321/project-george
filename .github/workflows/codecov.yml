@@ -31,5 +31,5 @@ jobs:
       - run: coverage run -m pytest
       - uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV }}
+          token: ${{ secrets.CODECOV_TOKEN }}
   # TODO set up codecov-flutter once the app is developed

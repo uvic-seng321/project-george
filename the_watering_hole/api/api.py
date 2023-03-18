@@ -55,7 +55,8 @@ def upload_post():
     tags = ":".join(tags) + ":ENDLIST"
     cur = db.connection.cursor()
     db_name = app.config.get("MYSQL_DB")
-    cmd = f"CALL `{db_name}`.`uploadPost`('{image_path}', {longitude}, {latitude}, {user}, '{tags}');"
+    # TODO use db_name
+    cmd = f"CALL `george`.`uploadPost`('{image_path}', {longitude}, {latitude}, {user}, '{tags}');"
     cur.execute(cmd)
     cur.close()
     return "", 200

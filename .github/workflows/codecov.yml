@@ -11,6 +11,12 @@ on:
 jobs:
   codecov-flask:
     name: Run CodeCov on Flask API
+    environment: test
+    env:
+      MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+      DEV_DATABASE: ${{ secrets.DEV_DATABASE }}
     defaults:
       run:
         working-directory: ./the_watering_hole/api

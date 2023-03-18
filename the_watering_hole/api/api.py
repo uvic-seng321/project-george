@@ -1,12 +1,15 @@
-from flask import Flask, request, jsonify
-from flask_mysqldb import MySQL
+import io
+import os
+import uuid
 
 from constants import *
+from flask import Flask, jsonify, request
+from flask_mysqldb import MySQL
+from PIL import Image
 
 app = Flask(__name__)
-app.config.from_object('config.ProdConfig')
-
 db = MySQL(app)
+app.config.from_object('config.ProdConfig')
 
 @app.route('/', methods=['GET'])
 def home():
@@ -17,12 +20,46 @@ def get_posts():
     # TODO implement this
     return "", 400
 
-# Syntax for uploadPost is:
-# CALL `george`.`uploadPost`('URL', LONG (float), LAT (float), USER (int), 'TAGS:SEPARATED:BY:COLONS:ENDING:IN:ENDLIST');")
 @app.route('/uploadPost', methods=['POST'])
 def upload_post():
-    # TODO implement this
-    return "", 400
+    '''
+    Upload a post to the database
+
+    Syntax for uploadPost is:
+
+    CALL `database_name`.`uploadPost`('URL', LONG (float), LAT (float), USER (int), 'TAGS:SEPARATED:BY:COLONS:ENDING:IN:ENDLIST');")
+    '''
+    # Grab the arguments provided in the request
+    tags = request.args.getlist('tags')
+    user = request.args.get('user')
+    latitude = request.args.get('latitude', None)
+    longitude = request.args.get('longitude', None)
+    radius = request.args.get('radius', None)
+
+    # Ensure the latitude, longitude, and radius are specified correctly
+    if latitude is not None and longitude is not None:
+        if (float(latitude) < -90 or
+            float(latitude) > 90 or
+            float(longitude) < -180 or
+                float(longitude) > 180):
+            return INVALID_LOCATION, 400
+        if radius is None:
+            return NO_RADIUS_GIVEN, 400
+        
+    # Upload image to the storage folder
+    image = Image.open(io.BytesIO(request.data))
+    image_path = str(uuid.uuid4()) + ".png"
+    # TODO use a constant or environment variable for the storage folder
+    image.save(fp = os.environ["IMAGE_DIR"] + "/" + image_path, format = "png")
+    # Send the post to the database using the uploadPost stored procedure
+    tags = ":".join(tags) + ":ENDLIST"
+    cur = db.connection.cursor()
+    db_name = app.config.get("MYSQL_DB")
+    cmd = f"CALL `{db_name}`.`uploadPost`('{image_path}', {longitude}, {latitude}, {user}, '{tags}');"
+    cur.execute(cmd)
+    cur.close()
+    return "", 200
+
 
 @app.route('/removePost', methods=['DELETE'])
 def remove_post():

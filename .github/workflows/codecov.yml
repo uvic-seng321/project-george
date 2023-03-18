@@ -8,6 +8,13 @@ on:
     branches:
       - main
 
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: no
+  require_head: yes
+
 jobs:
   codecov-flask:
     name: Run CodeCov on Flask API

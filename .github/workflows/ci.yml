@@ -10,6 +10,11 @@ on:
 
 # Flutter actions taken from https://github.com/subosito/flutter-action
 jobs:
+  codecov:
+    name: Upload coverage reports to Codecov
+    runs-on: ubuntu-latest
+    steps:
+      - uses: codecov/codecov-action@v3
   api:
     name: Test the Flask API
     runs-on: ubuntu-latest

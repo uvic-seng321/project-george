@@ -33,7 +33,7 @@ jobs:
       - run: python -m pytest --cov=api --cov-report=xml test/
       - uses: actions/upload-artifact@v2
         with:
-          path: coverage.xml
+          path: ./the_watering_hole/api/coverage.xml
 
 #   build-android:
 #     name: Run Flutter build and tests on Android

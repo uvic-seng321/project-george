@@ -1,5 +1,3 @@
-from api import db
-
 def upload_url(user : int = 1, 
             lat : float = 1, 
             long : float = 1, 
@@ -30,13 +28,3 @@ def get_url(pageNum : int = 1,
         req += "&radius=" + str(radius)
     req += "".join(["&tags=" + tag for tag in tags])
     return req
-
-def reset_db():
-    '''Empty the database'''
-    cur = db.connection.cursor()
-    # TODO it would be better to have this as a stored procedure in the test DB
-    cur.execute("DELETE * FROM Posts")
-    cur.execute("DELETE * FROM Tags")
-    cur.fetchall()
-    cur.close()
-    db.connection.commit()

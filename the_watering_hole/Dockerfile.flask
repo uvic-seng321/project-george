@@ -1,0 +1,10 @@
+FROM python:3.11
+LABEL maintainer="christianmbookout@gmail.com"
+
+COPY api/ ./
+
+RUN pip install -r requirements.txt
+
+EXPOSE 3434
+
+CMD python -m api

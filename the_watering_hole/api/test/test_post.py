@@ -1,17 +1,9 @@
 import io
 from flask import Flask
-import pytest
 import os
 from PIL import Image
 from test.test_helpers import upload_url, reset_db
 from constants import *
-
-
-@pytest.fixture(scope="class")
-def setup_db():
-    '''Create three posts for testing'''
-    yield
-    reset_db()
 
 class TestPost:
 

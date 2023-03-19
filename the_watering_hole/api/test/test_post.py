@@ -3,50 +3,39 @@ from flask import Flask
 import pytest
 import os
 from PIL import Image
-
+from test.test_helpers import upload_url, reset_db
 from constants import *
 
-@pytest.fixture()
-def test_image():
-    '''Read peacock.png from test_images'''
-    with open('test/test_images/peacock.png', 'rb') as f:
-        image = f.read()
-    yield image
 
-def upload_url(user : int = 1, 
-               lat : float = 1, 
-               long : float = 1, 
-               tags = []):
-    '''Create a url for the uploadPost endpoint'''
+@pytest.fixture(scope="class")
+def setup_db():
+    '''Create three posts for testing'''
+    yield
+    reset_db()
 
-    req = "/uploadPost?"
-    req += "user=" + str(user) 
-    req += "&latitude=" + str(lat)
-    req += "&longitude=" + str(long)
-    req += "".join(["&tags=" + tag for tag in tags])
-    return req
+class TestPost:
 
-def test_upload_post(client: Flask, test_image, temp_dir):
-    '''Test that the uploadPost endpoint successfully uploads a post and returns 200'''
+    def test_upload_post(self, client: Flask, test_image, temp_dir):
+        '''Test that the uploadPost endpoint successfully uploads a post and returns 200'''
 
-    # Create a post with simple data for testing.
-    url = upload_url(tags = ["A", "B"])
-    response = client.post(url, data=test_image)
+        # Create a post with simple data for testing.
+        url = upload_url(tags = ["A", "B"])
+        response = client.post(url, data=test_image)
 
-    # Check that the post was uploaded successfully
-    assert response.status_code == 200, "uploadPost should return 200 signifying its success"
+        # Check that the post was uploaded successfully
+        assert response.status_code == 200, "uploadPost should return 200 signifying its success"
 
-    assert len(os.listdir(temp_dir)) == 1, "There should only be one file uploaded"
+        assert len(os.listdir(temp_dir)) == 1, "There should only be one file uploaded"
 
-    # Ensure the uploaded image is the same image as the one POSTed
-    image_url = os.listdir(temp_dir)[0]
-    image = Image.open(temp_dir + "/" + image_url)
-    assert image == Image.open(io.BytesIO(test_image)), "The uploaded image in the file system should be the same as the test image POSTed"
+        # Ensure the uploaded image is the same image as the one POSTed
+        image_url = os.listdir(temp_dir)[0]
+        image = Image.open(temp_dir + "/" + image_url)
+        assert image == Image.open(io.BytesIO(test_image)), "The uploaded image in the file system should be the same as the test image POSTed"
 
-def test_invalid_location(client: Flask, test_image):
-    '''Test that the getPosts endpoint returns an error when given an invalid location'''
+    def test_invalid_location(self, client: Flask, test_image):
+        '''Test that the getPosts endpoint returns an error when given an invalid location'''
 
-    # Create a post with an invalid location
-    url = upload_url(lat=91, long=181, tags = ["A", "B"])
-    response = client.post(url, data=test_image)
-    assert response.text == INVALID_LOCATION and response.status_code == 400, "uploadPost should return 400 when given an invalid location"
+        # Create a post with an invalid location
+        url = upload_url(lat=91, long=181, tags = ["A", "B"])
+        response = client.post(url, data=test_image)
+        assert response.text == INVALID_LOCATION and response.status_code == 400, "uploadPost should return 400 when given an invalid location"

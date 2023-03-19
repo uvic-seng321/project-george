@@ -7,6 +7,9 @@ https://github.com/uvic-seng321/project-george/blob/5bb3e2ae5e0cb7c4bcf7e14bb03f
 
 SQL Documentation:
 https://github.com/uvic-seng321/project-george/blob/5bb3e2ae5e0cb7c4bcf7e14bb03f7e6555b48b20/SQL%20Documentation/Table%20Design.txt
+
 https://github.com/uvic-seng321/project-george/blob/5bb3e2ae5e0cb7c4bcf7e14bb03f7e6555b48b20/SQL%20Documentation/SP%20Design.txt
+
 https://github.com/uvic-seng321/project-george/blob/5bb3e2ae5e0cb7c4bcf7e14bb03f7e6555b48b20/SQL%20Documentation/uploadPost.txt
+
 https://github.com/uvic-seng321/project-george/blob/5bb3e2ae5e0cb7c4bcf7e14bb03f7e6555b48b20/SQL%20Documentation/getPosts.txt

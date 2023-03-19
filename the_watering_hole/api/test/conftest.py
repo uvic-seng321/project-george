@@ -3,6 +3,13 @@ import pytest
 import api
 import os
 
+api.app.config.from_object('config.DevConfig')
+api.db.init_app(api.app)
+
+@pytest.fixture()
+def db():
+    yield api.db
+
 @pytest.fixture()
 def app():
     yield api.app
@@ -17,3 +24,10 @@ def temp_dir(tmp_path_factory):
     # Set the image directory to a temp dir, used in the uploadPost endpoint
     os.environ["IMAGE_DIR"] = dir
     return dir
+
+@pytest.fixture()
+def test_image():
+    '''Read peacock.png from test_images'''
+    with open('test/test_images/peacock.png', 'rb') as f:
+        image = f.read()
+    yield image

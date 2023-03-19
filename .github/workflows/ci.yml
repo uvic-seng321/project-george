@@ -34,6 +34,18 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           path: ./the_watering_hole/api/coverage.xml
+  codecov-flask:
+    name: Run CodeCov on Flask API
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v2
+        with:
+          path: ./the_watering_hole/api/coverage.xml
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+  # TODO set up codecov-flutter once the app is developed
 
 #   build-android:
 #     name: Run Flutter build and tests on Android

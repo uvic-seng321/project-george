@@ -2,7 +2,7 @@ import io
 from flask import Flask
 import os
 from PIL import Image
-from test.test_helpers import upload_url, reset_db
+from test.test_helpers import upload_url
 from constants import *
 
 class TestPost:

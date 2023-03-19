@@ -2,7 +2,6 @@ from flask import Flask
 import pytest
 import api
 import os
-from test.test_helpers import reset_db
 
 api.app.config.from_object('config.DevConfig')
 api.db.init_app(api.app)

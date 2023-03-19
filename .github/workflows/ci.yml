@@ -36,6 +36,7 @@ jobs:
           path: ./the_watering_hole/api/coverage.xml
   codecov-flask:
     name: Run CodeCov on Flask API
+    needs: api
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

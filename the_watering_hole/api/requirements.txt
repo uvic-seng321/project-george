@@ -24,7 +24,6 @@ pytest==7.2.2
 pytest-cov==4.0.0
 python-dotenv==1.0.0
 requests==2.28.2
-SQLAlchemy==2.0.6
 testing.common.database==2.0.3
 testing.mysqld==1.4.0
 tomli==2.0.1

@@ -1,0 +1,15 @@
+uploadPost
+Used to create a new post in the database.
+pImageURL varchar(255) - image location
+pLat FLOAT - latitude of post
+pLon FLOAT - longitude of post
+pPoster INT - user ID of post
+ptags varchar(8000) - a list of tags seperated by colons, ending with 'ENDLIST'
+
+getPosts
+Used to get post information from the database.
+pPageNumber INT - which page of posts to get, ie the first 100, second 100, etc
+pLat FLOAT - latitude to center filter on
+pLon FLOAT - longitude to center filter on
+pRad Float - radius to include posts within
+ptags varchar(8000) - a list of tags seperated by colons, ending with 'ENDLIST', used to filter results

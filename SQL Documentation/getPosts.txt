@@ -1,0 +1,65 @@
+CREATE DEFINER=`sql_user`@`%` PROCEDURE `getPosts`(pPageNumber INT, pLat FLOAT, pLon FLOAT, pRad Float, ptags varchar(8000))
+begin
+
+CREATE TEMPORARY TABLE ValidTags(
+    TagID INT PRIMARY KEY auto_increment,
+    PostID INT,
+    Tag VARCHAR(100)
+);
+
+SET @tagCounter = 1;
+SET @tag = '';
+
+tagLoop: LOOP
+    SET @tag = substring_index(substring_index(ptags, ':', @tagCounter), ':', -1);
+    
+    INSERT INTO `ValidTags`
+    (`PostID`, `Tag`)
+    SELECT 
+    `PostID`, `Tag`
+    FROM `george`.`Tags`
+    WHERE `Tag` = @tag;
+    
+    SET @tagCounter = @tagCounter + 1;
+    
+    IF @tag = 'ENDLIST' OR @tagCounter > 100 THEN
+        LEAVE tagloop;
+    END IF;
+END LOOP tagLoop;
+
+SELECT
+    PostID,
+    ImageURL,
+    Latitude,
+    Longitude,
+    Poster,
+    Views,
+    PostDate,
+    RowNum
+FROM (
+    SELECT
+    MyDeeperDerivedTable.PostID,
+    ImageURL,
+    Latitude,
+    Longitude,
+    Poster,
+    Views,
+    PostDate,
+    tagCount,
+    ROW_NUMBER() OVER (ORDER BY `PostDate` DESC) AS RowNum
+    FROM `george`.`Posts`
+    INNER JOIN (
+        SELECT `PostID`, COUNT(`TagID`) AS `tagCount`
+        FROM `ValidTags`
+        GROUP BY `PostID`
+    ) AS MyDeeperDerivedTable
+    ON `george`.`Posts`.`PostID` = MyDeeperDerivedTable.`PostID`
+    WHERE `tagCount` = @tagCounter-1 
+    GROUP BY MyDeeperDerivedTable.`PostID`, `george`.`Posts`.`PostID`
+) AS MyDerivedTable
+WHERE MyDerivedTable.RowNum BETWEEN (pPageNumber-1)*100 AND (pPageNumber)*100
+ORDER BY `PostDate` DESC;
+
+DROP TABLE ValidTags;
+
+end

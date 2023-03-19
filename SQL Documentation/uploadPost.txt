@@ -1,0 +1,39 @@
+CREATE DEFINER=`sql_user`@`%` PROCEDURE `uploadPost`(pImageURL varchar(255), pLat FLOAT, pLon FLOAT, pPoster INT, ptags varchar(8000))
+begin
+
+INSERT INTO `george`.`Posts`
+(`ImageURL`,
+`Latitude`,
+`Longitude`,
+`Poster`,
+`PostDate`)
+VALUES
+(pImageURL,
+pLat,
+pLon,
+pPoster,
+NOW());
+
+SET @PostID = -1;
+SELECT @PostID := last_insert_id();
+SET @tagCounter = 1;
+SET @tag = '';
+
+tagLoop: LOOP
+    SET @tag = substring_index(substring_index(ptags, ':', @tagCounter), ':', -1);
+    
+    INSERT INTO `george`.`Tags`
+    (`PostID`, `Tag`)
+    VALUES
+    (@PostID, @tag);
+    
+    IF @tag = 'ENDLIST' or @tagCounter > 100 THEN
+        LEAVE tagloop;
+    END IF;
+    
+    SET @tagCounter = @tagCounter + 1;
+END LOOP tagLoop;
+
+SELECT 100;
+
+end

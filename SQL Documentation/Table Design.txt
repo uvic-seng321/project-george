@@ -1,0 +1,23 @@
+Posts
+A post is what occurs when a user uploads an image with specific metadata such as location, tags, and any other content.
+Image (string)
+Post ID (int primary)
+Latitude location (float)
+Longitude location (float)
+Poster (int)
+Views (int)
+Post Date (date time)
+
+Tags
+A tag is attached to a certain post and allows filtering results by said tag.
+Tag ID (int)
+Post ID (int)
+Tag (string)
+
+Users - Not Implemented
+A user creates their account when they first enter the app. Users without accounts may not use the app’s full functionality. There is a default location that the user must enter, so we can provide a feed of images to them in this default location.
+UserID (int)
+Username (string)
+Password (Hash)
+Latitude Default Location (float) 
+Longitude Default Location (float) 

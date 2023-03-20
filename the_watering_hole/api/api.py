@@ -17,7 +17,11 @@ def home():
 
 def str_tags(tags : list):
     '''Convert a list of tags to the string expected by the database'''
-    return ":".join(tags) + ":ENDLIST"
+    tags = ":".join(tags)
+    # Need to have a colon before ENDLIST if there are any tags
+    if tags != "":
+        tags += ":"
+    return tags + "ENDLIST"
 
 def is_location_valid(longitude, latitude):
     '''Verify that the latitude and longitude are valid'''

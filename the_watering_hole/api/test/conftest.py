@@ -1,22 +1,17 @@
 from flask import Flask
 import pytest
-import api
 import os
 
-api.app.config.from_object('config.DevConfig')
-api.db.init_app(api.app)
-
-@pytest.fixture()
-def db():
-    yield api.db
+from api.api import create_app
 
 @pytest.fixture()
 def app():
-    yield api.app
+    app = create_app()
+    yield app
 
 @pytest.fixture()
 def client(app : Flask):
-    return app.test_client()
+    yield app.test_client()
 
 @pytest.fixture(scope="session")
 def temp_dir(tmp_path_factory):

@@ -6,7 +6,7 @@ from constants import NO_LOCATION_GIVEN, NO_RADIUS_GIVEN
 class TestGetPosts:
     def test_no_page_num(self, client: Flask):
         '''Test that the getPosts endpoint returns all posts with a specified tag given no page number'''
-        response = client.get("/getPosts?tags=A")
+        response = client.get("/posts/getPosts?tags=A")
         assert response.status_code == 200, "getPosts should be successful when given no page number"
 
         # Ensure the response contains posts

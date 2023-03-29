@@ -4,7 +4,7 @@ def upload_url(user : int = 1,
             tags = []):
     '''Create a url for the uploadPost endpoint'''
 
-    req = "/uploadPost?"
+    req = "/posts/uploadPost?"
     req += "user=" + str(user) 
     req += "&latitude=" + str(lat)
     req += "&longitude=" + str(long)
@@ -18,7 +18,7 @@ def get_url(pageNum : int = 1,
             tags = [],):
     '''Create a url for the getPosts endpoint'''
 
-    req = "/getPosts?"
+    req = "/posts/getPosts?"
     req += "pageNum=" + str(pageNum)
     if lat is not None:
         req += "&latitude=" + str(lat)

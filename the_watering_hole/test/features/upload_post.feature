@@ -3,7 +3,7 @@
 Feature: [Post] Uploading and receiving posts
 
     Scenario: Upload image in post form
-        Given the user presses the "add image" button and selects an image with URL "test_images/sheep.png"
+        Given the user presses the "addImage" button and selects an image with URL "test_images/sheep.png"
         When the user is on the upload page
         Then the user is able to upload an image which is "stored in local memory"
 
@@ -31,7 +31,7 @@ Feature: [Post] Uploading and receiving posts
             | sheep, big sheep |
             | sheep, fluffy sheep, cartoon sheep |
 
-    Scenario: Upload post to the backend with a non-existant URL
-        Given the user clicks the "addImage" button and uses the image at URL "test_images/non_existant_sheep.png"
+    Scenario: Upload post to the backend no image
+        Given the user fills in all required fields but enters no image
         When the user is creating a post on the upload page
         Then clicking "uploadPost" flashes an error in the "errorBox" widget of "Image not found"

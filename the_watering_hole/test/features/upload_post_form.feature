@@ -1,6 +1,5 @@
-
-@post
-Feature: [Post] Uploading and receiving posts
+@uploadPostForm
+Feature: [Post] Entering data into the "upload post" form and submitting it
 
     Scenario: Upload image in post form
         Given the user presses the "addImage" button and selects an image with URL "test_images/sheep.png"

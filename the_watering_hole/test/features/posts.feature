@@ -3,7 +3,7 @@ Feature: [Post] Uploading and receiving posts from the backend
 
     Scenario: Uploading a post to the backend
         Given a post is being uploaded to the backend
-        When a post with tags <tag>, latitude <latitude>, longitude <longitude> and image url <url> is created
+        When a post with tag(s) <tag>, latitude <latitude>, longitude <longitude> and image url <url> is created
         | tag | latitude | longitude | url |
         ||||test_images/sheep.png|
         | cool sheep, cute sheep |||test_images/sheep.png|

@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+// screens/camera_screen.dart';
 
+//List<CameraDescription> cameraList = [];
+
+// main has to be an async function to allow the 'await' in the camera detection
+// before launching the app
+// void main() async {
 void main() {
+  // Detecting device cameras
+ // try{
+  //  WidgetsFlutterBinding.ensureInitialized();
+  //  cameraList = await availableCameras();
+ // } on CameraException catch (e){
+ //   print('Error fetching the cameras: $e');
+ // }
+
+  // Launch the app
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -24,7 +41,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'The Watering Hole Home Page'),
     );
   }
 }
@@ -60,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
+  
 
   @override
   Widget build(BuildContext context) {

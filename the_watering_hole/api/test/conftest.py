@@ -2,7 +2,7 @@ from flask import Flask
 import pytest
 import os
 
-from api.api import create_app
+from api.app import create_app
 
 @pytest.fixture()
 def app():

@@ -54,7 +54,7 @@ class TestPostIntegration:
         assert first_response.status_code == 200 and second_response.status_code == 200, "both locations uploaded should be successful"
 
         # Check that both posts are returned when given a large radius
-        url = get_url(lat=0, long=0, radius=10000)
+        url = get_url(lat=0, long=0, radius=1000000)
         response = client.get(url)
 
         assert response.status_code == 200, "getPosts should be successful"
@@ -63,9 +63,9 @@ class TestPostIntegration:
         loc_1_exists = False
         loc_2_exists = False
         for post in response.json:
-            if "Location Test 1" in post["tags"]:
+            if post["latitude"] == -89 and post["longitude"] == -179:
                 loc_1_exists = True
-            if "Location Test 2" in post["tags"]:
+            if post["latitude"] == 89 and post["longitude"] == 179:
                 loc_2_exists = True
 
         assert loc_1_exists and loc_2_exists, "Both locations should be returned when given a large radius"

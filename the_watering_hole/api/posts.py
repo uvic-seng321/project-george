@@ -2,6 +2,7 @@ import io
 import os
 import uuid
 
+from h3 import point_dist
 from flask import Blueprint, request, jsonify
 from constants import INVALID_LOCATION, NO_LOCATION_GIVEN, NO_RADIUS_GIVEN
 from utils import send_get_posts, send_upload_post, send_query
@@ -34,6 +35,14 @@ def jsonify_get(res):
             "views": result[5], 
             "date": result[6],
             "tags": result[7]} for result in res]
+
+def filter_location(json_results, latitude, longitude, radius):
+    '''Filter the results of a get request by location'''
+    filtered_results = []
+    for result in json_results:
+        if point_dist((latitude, longitude), (result["latitude"], result["longitude"])) <= radius:
+            filtered_results.append(result)
+    return filtered_results
 
 @posts_api.route('/getPosts', methods=['GET'])
 def get_posts():
@@ -72,11 +81,10 @@ def get_posts():
     cmd_params.insert(0, pageNum)
     res = send_get_posts(cmd_params)
     res = jsonify_get(res)
+    res = filter_location(res, float(latitude), float(longitude), float(radius)) if radius is not None else res
 
-    # Get the tags for each post
     for r in res:
-        tags = send_query("SELECT Tag FROM george.Tags WHERE PostID = %s;", [str(r["id"])])
-        r["tags"] = [tag[0] for tag in list(tags)[:-1]]
+        r["tags"] = tags
     return jsonify(res), 200
 
 @posts_api.route('/uploadPost', methods=['POST'])
@@ -91,7 +99,6 @@ def upload_post():
     # Ensure the latitude and longitude are specified correctly
     if not is_location_valid(longitude, latitude):
         return INVALID_LOCATION, 400
-        
     # Upload image to the storage folder
     image = Image.open(io.BytesIO(request.data))
     image_path = str(uuid.uuid4()) + ".png"
@@ -100,7 +107,7 @@ def upload_post():
     # Send the post to the database using the uploadPost stored procedure
     tags = str_tags(tags)
     cmd_params = [image_path, latitude, longitude, user, tags]
-    res = send_upload_post(cmd_params)
+    send_upload_post(cmd_params)
     return "", 200
 
 # @posts_api.route('/removePost', methods=['DELETE'])

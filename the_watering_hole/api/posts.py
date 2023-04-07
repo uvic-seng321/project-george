@@ -46,9 +46,19 @@ def filter_location(json_results, latitude, longitude, radius):
             filtered_results.append(result)
     return filtered_results
 
+@posts_api.route('/getTags', methods=['GET'])
+def get_tags():
+    '''Get a list of tags from the server by id'''
+    id = request.args.get('id', None)
+    if id is None:
+        return "No id provided", 400
+    tags = send_query("SELECT Tag FROM Tags WHERE PostID = %s", [id])
+    tags = [tag[0] for tag in tags if tag[0] != "ENDLIST"]
+    return jsonify(tags), 200
+
 @posts_api.route('/getImage', methods=['GET'])
 def get_image():
-    '''Get an image from the server by url'''
+    '''Get an image from the server by id'''
     id = request.args.get('id', None)
     if id is None:
         return "No id provided", 400
@@ -99,15 +109,13 @@ def get_posts():
     res = jsonify_get(res)
     res = filter_location(res, float(latitude), float(longitude), float(radius)) if radius is not None else res
 
-    for r in res:
-        r["tags"] = tags
     return jsonify(res), 200
 
 @posts_api.route('/uploadPost', methods=['POST'])
 def upload_post():
     '''Upload a post to the database and store the image in the file system'''
     # Grab the arguments provided in the request
-    tags = request.form.getlist('tags')
+    tags = request.form.getlist('tags[]')
     user = request.form.get('user')
     latitude = request.form.get('latitude')
     longitude = request.form.get('longitude')

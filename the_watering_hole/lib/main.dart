@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'take_photo_screen.dart';
 import 'Feed.dart';
+import 'backend.dart';
 // screens/camera_screen.dart';
 
 //List<CameraDescription> cameraList = [];
@@ -48,7 +49,7 @@ class TabBar1 extends StatelessWidget {
           body: TabBarView(
             children: [
               TakePhotoScreen(camera: firstCamera,),
-              Icon(Icons.directions_transit),
+              PostList(),
             ],
           ),
         ),

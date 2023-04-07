@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'take_photo_screen.dart';
+import 'Feed.dart';
 // screens/camera_screen.dart';
 
 //List<CameraDescription> cameraList = [];
@@ -7,17 +9,52 @@ import 'package:camera/camera.dart';
 // main has to be an async function to allow the 'await' in the camera detection
 // before launching the app
 // void main() async {
-void main() {
-  // Detecting device cameras
- // try{
-  //  WidgetsFlutterBinding.ensureInitialized();
-  //  cameraList = await availableCameras();
- // } on CameraException catch (e){
- //   print('Error fetching the cameras: $e');
- // }
+
+//global lol
+// ignore: prefer_typing_uninitialized_variables
+var firstCamera;
+
+void main() async {
+  // Ensure that plugin services are initialized so that `availableCameras()`
+  // can be called before `runApp()`
+  WidgetsFlutterBinding.ensureInitialized();
+  // Obtain a list of the available cameras on the device.
+  final cameraList = await availableCameras();
+  // Get a specific camera from the list of available cameras.
+  firstCamera = cameraList.first;
 
   // Launch the app
-  runApp(const MyApp());
+  runApp(const TabBar1());
+}
+
+class TabBar1 extends StatelessWidget {
+  const TabBar1({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: const TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.camera_alt)),
+                Tab(icon: Icon(Icons.dynamic_feed)),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              TakePhotoScreen(camera: firstCamera,),
+              Icon(Icons.directions_transit),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 

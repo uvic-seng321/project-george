@@ -18,8 +18,8 @@ class TestPost:
         assert response.status_code == 200, "uploadPost should return 200 signifying its success"
 
         # Ensure the uploaded image is the same image as the one POSTed
-        image_url = os.listdir(os.getenv("FLASK_IMAGE_DIR"))[0]
-        image = Image.open(os.getenv("FLASK_IMAGE_DIR") + "/" + image_url)
+        image_url = os.listdir(os.getenv("IMAGE_DIR"))[0]
+        image = Image.open(os.getenv("IMAGE_DIR") + "/" + image_url)
         assert image == Image.open(io.BytesIO(test_image)), "The uploaded image in the file system should be the same as the test image POSTed"
 
     def test_invalid_location(self, client: Flask, test_image):

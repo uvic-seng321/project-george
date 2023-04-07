@@ -5,11 +5,8 @@ import os
 from api.app import create_app
 
 @pytest.fixture()
-def app(tmp_path_factory):
+def app():
     app = create_app(testing=True)
-    dir = str(tmp_path_factory.mktemp("image_files"))
-    # Set the image directory to a temp dir, used in the uploadPost endpoint
-    os.environ["FLASK_IMAGE_DIR"] = dir
     yield app
 
 @pytest.fixture()

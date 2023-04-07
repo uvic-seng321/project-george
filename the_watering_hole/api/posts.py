@@ -11,7 +11,7 @@ from PIL import Image
 
 posts_api = Blueprint('posts_api', __name__)
 
-IMAGE_DIR = os.environ["FLASK_IMAGE_DIR"] + "/"
+IMAGE_DIR = os.environ["IMAGE_DIR"] + "/"
 
 def str_tags(tags : list):
     '''Convert a list of tags to the string expected by the database'''

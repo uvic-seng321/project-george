@@ -19,6 +19,7 @@ jobs:
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
       MYSQL_DB: ${{ secrets.MYSQL_DB }}
       DEV_DATABASE: ${{ secrets.DEV_DATABASE }}
+      IMAGE_DIR: .
     runs-on: ubuntu-latest
     defaults:
       run:

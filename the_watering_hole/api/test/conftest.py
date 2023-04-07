@@ -13,12 +13,12 @@ def app():
 def client(app : Flask):
     yield app.test_client()
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def temp_dir(tmp_path_factory):
     dir = str(tmp_path_factory.mktemp("image_files"))
     # Set the image directory to a temp dir, used in the uploadPost endpoint
-    os.environ["IMAGE_DIR"] = dir
-    return dir
+    os.environ["FLASK_IMAGE_DIR"] = dir
+    yield dir
 
 @pytest.fixture()
 def test_image():

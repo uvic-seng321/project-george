@@ -1,8 +1,9 @@
+import base64
 import io
 from flask import Flask
 import os
 from PIL import Image
-from test.test_helpers import upload_url, get_url
+from test.test_helpers import upload_url, get_url, upload_form
 from constants import *
 
 class TestPostIntegration:
@@ -12,8 +13,9 @@ class TestPostIntegration:
         '''Test a post with a new tag is created when a post is uploaded with the new tag'''
 
         # Create a post with a new tag
-        url = upload_url(tags = ["Unique Tag", "A", "B"])
-        response = client.post(url, data=test_image)
+        data = upload_form(test_image, tags = ["Unique Tag"])
+        # Add the data and image to the request
+        response = client.post(upload_url(), data=data, content_type='multipart/form-data', buffered=True)
 
         # Check that the post was uploaded successfully
         assert response.status_code == 200, "uploadPost should be successful"
@@ -28,8 +30,8 @@ class TestPostIntegration:
     def test_correct_image(self, client : Flask, test_image):
         '''Test that the getPosts endpoint successfully returns the url of the image uploaded by the uploadPost endpoint'''
 
-        url = upload_url(tags = ["Image Test"])
-        response = client.post(url, data=test_image)
+        data = upload_form(test_image, tags = ["Image Test"])
+        response = client.post(upload_url(), data=data, content_type='multipart/form-data', buffered=True)
 
         # Check that the post was uploaded successfully
         assert response.status_code == 200, "getPosts should be successful"
@@ -37,18 +39,19 @@ class TestPostIntegration:
         # Check that the image returned by getPosts is the same as the image uploaded
         url = get_url(tags = ["Image Test"])
         response = client.get(url)
-        image_path = os.environ["IMAGE_DIR"] + "/" + response.json[0]["url"]
-        assert Image.open(image_path) == Image.open(io.BytesIO(test_image)), "getPosts should return an image url that exists and is the same as the image expected"
+        image_response = client.get("posts/getImage?id=" + str(response.json[0]["id"]))
+        image = image_response.data
+        assert Image.open(io.BytesIO(base64.b64decode(image))) == Image.open(io.BytesIO(test_image))
 
     def test_by_location(self, client : Flask, test_image):
         '''Test that the getPosts endpoint successfully returns all posts uploaded given a large radius'''
 
         # Upload two posts with locations far from eachother
-        first_loc = upload_url(lat=-89, long=-179, tags = ["Location Test 1"])
-        second_loc = upload_url(lat=89, long=179, tags = ["Location Test 2"])
+        location1 = upload_form(test_image, lat=-89, long=-179, tags = ["Location Test 1"])
+        location2 = upload_form(test_image, lat=89, long=179, tags = ["Location Test 2"])
 
-        first_response = client.post(first_loc, data=test_image)
-        second_response = client.post(second_loc, data=test_image)
+        first_response = client.post(upload_url(), data=location1, content_type='multipart/form-data', buffered=True)
+        second_response = client.post(upload_url(), data=location2, content_type='multipart/form-data', buffered=True)
 
         # Check that the posts were uploaded successfully
         assert first_response.status_code == 200 and second_response.status_code == 200, "both locations uploaded should be successful"

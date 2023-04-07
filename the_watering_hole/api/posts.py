@@ -1,3 +1,4 @@
+import base64
 import io
 import os
 import uuid
@@ -9,6 +10,8 @@ from utils import send_get_posts, send_upload_post, send_query
 from PIL import Image
 
 posts_api = Blueprint('posts_api', __name__)
+
+IMAGE_DIR = os.getenv("FLASK_IMAGE_DIR") + "/"
 
 def str_tags(tags : list):
     '''Convert a list of tags to the string expected by the database'''
@@ -28,7 +31,6 @@ def is_location_valid(longitude, latitude):
 def jsonify_get(res):
     '''Convert the result of a get request to a nice json object'''
     return [{"id": result[0],
-            "url": result[1], 
             "latitude": result[2], 
             "longitude": result[3], 
             "poster": result[4], 
@@ -43,6 +45,20 @@ def filter_location(json_results, latitude, longitude, radius):
         if point_dist((latitude, longitude), (result["latitude"], result["longitude"])) <= radius:
             filtered_results.append(result)
     return filtered_results
+
+@posts_api.route('/getImage', methods=['GET'])
+def get_image():
+    '''Get an image from the server by url'''
+    id = request.args.get('id', None)
+    if id is None:
+        return "No id provided", 400
+    
+    url = send_query("SELECT ImageURL FROM Posts WHERE PostID = %s", [id])[0][0]
+    try:
+        image = base64.b64encode(open(IMAGE_DIR + url, 'rb').read())
+        return image, 200
+    except:
+        return "Invalid url", 400
 
 @posts_api.route('/getPosts', methods=['GET'])
 def get_posts():
@@ -91,18 +107,21 @@ def get_posts():
 def upload_post():
     '''Upload a post to the database and store the image in the file system'''
     # Grab the arguments provided in the request
-    tags = request.args.getlist('tags')
-    user = request.args.get('user')
-    latitude = request.args.get('latitude')
-    longitude = request.args.get('longitude')
+    tags = request.form.getlist('tags')
+    user = request.form.get('user')
+    latitude = request.form.get('latitude')
+    longitude = request.form.get('longitude')
 
     # Ensure the latitude and longitude are specified correctly
     if not is_location_valid(longitude, latitude):
         return INVALID_LOCATION, 400
+
     # Upload image to the storage folder
-    image = Image.open(io.BytesIO(request.data))
+    image_bytes = io.BytesIO(request.files.get('image').read())
+
+    image = Image.open(image_bytes)
     image_path = str(uuid.uuid4()) + ".png"
-    image.save(fp = os.environ["IMAGE_DIR"] + "/" + image_path, format = "png")
+    image.save(fp = IMAGE_DIR + image_path, format = "png")
 
     # Send the post to the database using the uploadPost stored procedure
     tags = str_tags(tags)

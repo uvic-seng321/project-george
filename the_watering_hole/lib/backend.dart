@@ -7,9 +7,9 @@ import 'dart:io';
 
 class Post {
   List<String> tags;
-  Float latitude;
-  Float longitude;
-  File imageFile;
+  double latitude;
+  double longitude;
+  String imageFile;//File imageFile;
 
-  Post(this.tags, this.latitude, this.longitude, this.imageFile);
+  Post({required this.tags, required this.latitude, required this.longitude, required this.imageFile});
 }

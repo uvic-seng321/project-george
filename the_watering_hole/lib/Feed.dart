@@ -1,29 +1,16 @@
+
 import 'package:flutter/material.dart';
-
-class Post {
-  final String title;
-  final String body;
-
-  Post({required this.title, required this.body});
-}
+import 'backend.dart';
 
 class PostList extends StatefulWidget {
+  const PostList({super.key});
+
   @override
   _PostListState createState() => _PostListState();
 }
 
 class _PostListState extends State<PostList> {
   final List<Post> _posts = [
-    Post(title: 'Post 1', body: 'This is the body of post 1.'),
-    Post(title: 'Post 2', body: 'This is the body of post 2.'),
-    Post(title: 'Post 3', body: 'This is the body of post 3.'),
-    Post(title: 'Post 4', body: 'This is the body of post 4.'),
-    Post(title: 'Post 5', body: 'This is the body of post 5.'),
-    Post(title: 'Post 6', body: 'This is the body of post 6.'),
-    Post(title: 'Post 7', body: 'This is the body of post 7.'),
-    Post(title: 'Post 8', body: 'This is the body of post 8.'),
-    Post(title: 'Post 9', body: 'This is the body of post 9.'),
-    Post(title: 'Post 10', body: 'This is the body of post 10.'),
   ];
 
   final ScrollController _scrollController = ScrollController();
@@ -34,6 +21,7 @@ class _PostListState extends State<PostList> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _loadMorePosts();
   }
 
   @override
@@ -55,8 +43,8 @@ class _PostListState extends State<PostList> {
 
   Future<void> _loadMorePosts() async {
     // Simulate loading data from a generic source
-    await Future.delayed(Duration(seconds: 2));
-    final newPosts = List.generate(10, (index) => Post(title: 'Post ${_posts.length + index + 1}', body: 'This is the body of post ${_posts.length + index + 1}.'));
+    await Future.delayed(const Duration(seconds: 2));
+    final newPosts = List.generate(100, (index) => Post(tags: [], latitude: (_posts.length + index + 1).toDouble(), longitude: 0.toDouble(), imageFile: 'This is the body of post ${_posts.length + index + 1}.'));
     setState(() {
       _posts.addAll(newPosts);
       _isLoadingMore = false;
@@ -74,8 +62,8 @@ class _PostListState extends State<PostList> {
         } else {
           final post = _posts[index];
           return ListTile(
-            title: Text(post.title),
-            subtitle: Text(post.body),
+            title: Text(post.latitude.toString()),
+            subtitle: Text(post.imageFile.toString()),
           );
         }
       },

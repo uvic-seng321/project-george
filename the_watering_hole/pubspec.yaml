@@ -43,7 +43,6 @@ dependencies:
   gherkin: ^2.0.8
   http: ^0.13.5
   flutter_dotenv: ^5.0.2
-  path: ^1.8.2
   image_picker: ^0.8.7+1
 
 dev_dependencies:

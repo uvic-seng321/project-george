@@ -1,4 +1,5 @@
 import base64
+import io
 import json
 import os
 import uuid
@@ -128,8 +129,11 @@ def upload_post():
         return INVALID_LOCATION, 400
 
     # Upload image to the storage folder
-    
-    image_bytes = request.files.get('image') or base64.b64decode(request.form.get('image'))
+    if request.files.get('image') is not None:
+        image_bytes = io.BytesIO(request.files.get('image').read())
+    else:
+        image_bytes = base64.b64decode(request.form.get('image'))
+
     if image_bytes is None:
         return "No image provided", 400
 

@@ -1,0 +1,11 @@
+the_watering_hole/ios/Podfile
+the_watering_hole/ios/Flutter/Debug.xcconfig
+the_watering_hole/ios/Flutter/Release.xcconfig
+the_watering_hole/macos/Podfile
+the_watering_hole/macos/Flutter/Flutter-Debug.xcconfig
+the_watering_hole/macos/Flutter/Flutter-Release.xcconfig
+the_watering_hole/ios/Flutter/Debug.xcconfig
+the_watering_hole/ios/Flutter/Release.xcconfig
+the_watering_hole/macos/Flutter/Flutter-Debug.xcconfig
+the_watering_hole/macos/Flutter/Flutter-Release.xcconfig
+.vscode/launch.json

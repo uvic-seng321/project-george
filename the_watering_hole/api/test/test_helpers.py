@@ -1,21 +1,33 @@
-def upload_url(user : int = 1, 
-            lat : float = 1, 
-            long : float = 1, 
-            tags = []):
+import base64
+from werkzeug.datastructures import FileStorage
+import io
+import json
+
+
+def upload_url():
+    '''Create a url for the uploadPost endpoint'''
+    return "/posts/uploadPost"
+
+def upload_form(image, 
+                user: int = 1,
+                lat: float = 1,
+                long: float = 1,
+                tags=[]):
     '''Create a url for the uploadPost endpoint'''
 
-    req = "/posts/uploadPost?"
-    req += "user=" + str(user) 
-    req += "&latitude=" + str(lat)
-    req += "&longitude=" + str(long)
-    req += "".join(["&tags=" + tag for tag in tags])
-    return req
-    
-def get_url(pageNum : int = 1,
-            lat : float = None,
-            long : float = None,
-            radius : float = None,
-            tags = [],):
+    return {
+        "user": user,
+        "latitude": lat,
+        "longitude": long,
+        "tags[]": tags,
+        "image": (io.BytesIO(image), "test.png")
+    }
+
+def get_url(pageNum: int = 1,
+            lat: float = None,
+            long: float = None,
+            radius: float = None,
+            tags=[],):
     '''Create a url for the getPosts endpoint'''
 
     req = "/posts/getPosts?"

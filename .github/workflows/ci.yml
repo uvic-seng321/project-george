@@ -19,6 +19,7 @@ jobs:
       MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
       MYSQL_DB: ${{ secrets.MYSQL_DB }}
       DEV_DATABASE: ${{ secrets.DEV_DATABASE }}
+      IMAGE_DIR: .
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -30,24 +31,7 @@ jobs:
           python-version: '3.10.x'
       - run: python -m pip install --upgrade pip
       - run: pip install -r requirements.txt
-      - run: python -m pytest --cov=api --cov-report=xml test/
-      - uses: actions/upload-artifact@v2
-        with:
-          path: ./the_watering_hole/api/coverage.xml
-  codecov-flask:
-    name: Run CodeCov on Flask API
-    needs: api
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v2
-        with:
-          path: ./the_watering_hole/api/coverage.xml
-      - uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-  # TODO set up codecov-flutter once the app is developed
-
+      - run: python -m pytest
 #   build-android:
 #     name: Run Flutter build and tests on Android
 #     runs-on: ubuntu-latest

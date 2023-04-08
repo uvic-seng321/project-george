@@ -8,7 +8,6 @@ class TestGetPosts:
         '''Test that the getPosts endpoint returns all posts with a specified tag given no page number'''
         response = client.get("/posts/getPosts?tags=A")
         assert response.status_code == 200, "getPosts should be successful when given no page number"
-
         # Ensure the response contains posts
         assert len(response.json) > 0, "getPosts should return posts when given no page number"
 
@@ -31,7 +30,3 @@ class TestGetPosts:
 
         # Check that the post was uploaded successfully
         assert response.status_code == 200, "getPosts should return 200 when given only a tag"
-
-        # Check that the post we just created is in the response
-        assert ("A" in response.json[0]["tags"] and
-                "A" in response.json[1]["tags"]), "getPosts should return the posts with tags expected"

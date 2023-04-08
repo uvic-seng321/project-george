@@ -14,7 +14,13 @@ class Post {
   int? poster;
   int? views;
 
-  Post(this.id, this.tags, this.latitude, this.longitude,
+  Post(
+      {required this.id,
+      required this.tags,
+      required this.latitude,
+      required this.longitude});
+
+  Post.all(this.id, this.tags, this.latitude, this.longitude,
       [this.imageFile, this.date, this.poster, this.views]);
 
   @override
@@ -81,7 +87,7 @@ Future<List<Post>> getPosts(
     var json = jsonDecode(response.body);
     List<Post> posts = <Post>[];
     for (var v in json) {
-      posts.add(Post(
+      posts.add(Post.all(
           v["id"],
           [],
           v["latitude"],

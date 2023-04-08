@@ -1,27 +1,8 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
-import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
-// import 'package:flutter/material.dart';
-
-void main() async {
-  var post = Post(
-      874,
-      ["tag1", "tag2"],
-      1.2,
-      1.0,
-      File(
-          "/Users/christianbookout/Desktop/courses/seng321/project-george/the_watering_hole/api/test/test_images/peacock.png"));
-  // uploadPost(post);
-  // var image = await getImage(874);
-  uploadPost(post);
-  // var posts = await getPosts();
-  // print("Posties: " + posts.toString());
-  // print("Image size is ${image.height}");
-  // print(getPosts());
-}
+import 'package:flutter/material.dart';
 
 class Post {
   int id;
@@ -42,17 +23,19 @@ class Post {
   }
 }
 
-// Future<Image> getImage(int postID) async {
-//   var request = Uri.http(
-//       '192.168.1.84:5000', 'posts/getImage', {'id': postID.toString()});
-//   var response = await http.get(request);
-//   if (response.statusCode == 200) {
-//     return Image.memory(base64Decode(response.body));
-//   } else {
-//     throw Exception("Failed to get image. Response: $response");
-//   }
-// }
+// Get an image by the post ID
+Future<Image> getImage(int postID) async {
+  var request = Uri.http(
+      '162.156.55.214:5000', 'posts/getImage', {'id': postID.toString()});
+  var response = await http.get(request);
+  if (response.statusCode == 200) {
+    return Image.memory(base64Decode(response.body));
+  } else {
+    throw Exception("Failed to get image");
+  }
+}
 
+// Upload a post to the database
 Future<void> uploadPost(Post post) async {
   if (post.imageFile == null) {
     throw Exception("No image file was provided");
@@ -60,7 +43,7 @@ Future<void> uploadPost(Post post) async {
   // var fileBytes = await post.imageFile!.openRead();
   var bytes = await post.imageFile!.readAsBytes();
   var image = base64Encode(bytes);
-  var uri = Uri.http('192.168.1.84:5000', 'posts/uploadPost');
+  var uri = Uri.http('162.156.55.214:5000', 'posts/uploadPost');
   var request = http.MultipartRequest("POST", uri)
     ..fields.addAll({
       'latitude': post.latitude.toString(),
@@ -79,7 +62,6 @@ Future<void> uploadPost(Post post) async {
 
 // Get all posts from the server. Optional arguments of tags, latitude,
 // longitude, and radius can be passed in to filter the posts.
-//
 Future<List<Post>> getPosts(
     {int? pageNum,
     List<String>? tags,
@@ -93,7 +75,7 @@ Future<List<Post>> getPosts(
     "radius": radius,
     "pageNum": pageNum,
   }..removeWhere((_, value) => value == null);
-  var url = Uri.http('0.0.0.0:5000', '/posts/getPosts', queryParams);
+  var url = Uri.http('162.156.55.214:5000', '/posts/getPosts', queryParams);
   var response = await http.get(url);
   if (response.statusCode == 200) {
     var json = jsonDecode(response.body);
@@ -111,9 +93,8 @@ Future<List<Post>> getPosts(
     }
     return posts;
   } else if (response.statusCode == 400) {
-    throw Exception(
-        "A parameter has been inputted incorrectly. Response: $response");
+    throw Exception("A parameter has been inputted incorrectly");
   } else {
-    throw Exception("Failed to get posts. Response: $response");
+    throw Exception("Failed to get posts");
   }
 }

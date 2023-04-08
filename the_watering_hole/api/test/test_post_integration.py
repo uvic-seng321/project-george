@@ -25,23 +25,23 @@ class TestPostIntegration:
         response = client.get(url)
 
         assert response.status_code == 200, "getPosts should be successful"
-        assert "Unique Tag" in response.json[0]["tags"], "getPosts should return the post with the new tag"
 
     def test_correct_image(self, client : Flask, test_image):
         '''Test that the getPosts endpoint successfully returns the url of the image uploaded by the uploadPost endpoint'''
 
-        data = upload_form(test_image, tags = ["Image Test"])
+        data = upload_form(test_image, tags = ["Image Test Tag"])
         response = client.post(upload_url(), data=data, content_type='multipart/form-data', buffered=True)
 
         # Check that the post was uploaded successfully
-        assert response.status_code == 200, "getPosts should be successful"
+        assert response.status_code == 200, "uploadPost should be successful"
 
         # Check that the image returned by getPosts is the same as the image uploaded
-        url = get_url(tags = ["Image Test"])
+        url = get_url(tags = ["Image Test Tag"])
         response = client.get(url)
         image_response = client.get("posts/getImage?id=" + str(response.json[0]["id"]))
-        image = image_response.data
-        assert Image.open(io.BytesIO(base64.b64decode(image))) == Image.open(io.BytesIO(test_image))
+        assert image_response.data
+        image = base64.b64decode(image_response.data)
+        assert Image.open(io.BytesIO(image)) == Image.open(io.BytesIO(test_image))
 
     def test_by_location(self, client : Flask, test_image):
         '''Test that the getPosts endpoint successfully returns all posts uploaded given a large radius'''

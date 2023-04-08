@@ -19,7 +19,7 @@ def upload_form(image,
         "user": user,
         "latitude": lat,
         "longitude": long,
-        "tags": tags,
+        "tags[]": tags,
         "image": (io.BytesIO(image), "test.png")
     }
 

@@ -35,6 +35,7 @@ Future<Image> getImage(int postID) async {
       '162.156.55.214:5000', 'posts/getImage', {'id': postID.toString()});
   var response = await http.get(request);
   if (response.statusCode == 200) {
+    print("yes");
     return Image.memory(base64Decode(response.body));
   } else {
     throw Exception("Failed to get image");
@@ -71,15 +72,15 @@ Future<void> uploadPost(Post post) async {
 Future<List<Post>> getPosts(
     {int? pageNum,
     List<String>? tags,
-    Float? latitude,
-    Float? longitude,
-    Float? radius}) async {
+    double? latitude,
+    double? longitude,
+    double? radius}) async {
   var queryParams = {
     "tags": tags,
     "latitude": latitude,
     "longitude": longitude,
     "radius": radius,
-    "pageNum": pageNum,
+    "pageNum": pageNum.toString(),
   }..removeWhere((_, value) => value == null);
   var url = Uri.http('162.156.55.214:5000', '/posts/getPosts', queryParams);
   var response = await http.get(url);

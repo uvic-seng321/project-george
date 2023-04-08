@@ -10,8 +10,9 @@ class PostList extends StatefulWidget {
 }
 
 class _PostListState extends State<PostList> {
-  final List<Post> _posts = [
-  ];
+  List<Post> _posts = [];
+  List<String> _filters = ["TAG1"];
+  var page = 1;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -37,6 +38,7 @@ class _PostListState extends State<PostList> {
       setState(() {
         _isLoadingMore = true;
       });
+      page++;
       _loadMorePosts();
     }
   }
@@ -44,29 +46,67 @@ class _PostListState extends State<PostList> {
   Future<void> _loadMorePosts() async {
     // Simulate loading data from a generic source
     await Future.delayed(const Duration(seconds: 2));
-    final newPosts = List.generate(100, (index) => Post(tags: [], latitude: (_posts.length + index + 1).toDouble(), longitude: 0.toDouble(), imageFile: 'This is the body of post ${_posts.length + index + 1}.'));
+    final newPosts = List.generate(100, (index) => Post(tags: List.generate(4, (index2) => "TAG${_posts.length+index+1}"), latitude: (_posts.length + index + 1).toDouble(), longitude: 0.toDouble(), id: _posts.length + index + 1));
     setState(() {
       _posts.addAll(newPosts);
       _isLoadingMore = false;
     });
   }
 
+  void _filterPosts(String query) {
+
+    setState(() {
+      _filters.add(query);
+    });
+    page = 1;
+    _loadMorePosts();
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: _posts.length + (_isLoadingMore ? 1 : 0),
-      itemBuilder: (context, index) {
-        if (index == _posts.length) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          final post = _posts[index];
-          return ListTile(
-            title: Text(post.latitude.toString()),
-            subtitle: Text(post.imageFile.toString()),
-          );
-        }
-      },
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+          decoration: InputDecoration(
+            labelText: 'Search',
+            border: OutlineInputBorder(),
+          ),
+            onSubmitted: (value) => _filterPosts(value),
+          ),
+        ),
+        SizedBox(
+          height: 50,
+            child: ListView.builder(
+            itemCount: _filters.length,
+            itemBuilder: (context, index) {
+              final item = _filters[index];
+              return ListTile(
+                title: Text(item),
+              );
+            }
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            controller: _scrollController,
+            itemCount: _posts.length + (_isLoadingMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == _posts.length) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                final post = _posts[index];
+                return ListTile(
+                  title: Text(post.latitude.toString()),
+                  subtitle: Text(post.id.toString()),
+                );
+              }
+            }
+          )
+        )
+      ]
     );
   }
 }

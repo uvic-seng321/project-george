@@ -130,7 +130,7 @@ def upload_post():
 
     # Upload image to the storage folder
     if request.files.get('image') is not None:
-        image_bytes = io.BytesIO(request.files.get('image').read())
+        image_bytes = request.files.get('image').read()
     else:
         image_bytes = base64.b64decode(request.form.get('image'))
 

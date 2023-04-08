@@ -64,12 +64,12 @@ def get_image():
     if id is None:
         return "No id provided", 400
     
-    url = send_query("SELECT ImageURL FROM Posts WHERE PostID = %s", [id])[0][0]
     try:
+        url = send_query("SELECT ImageURL FROM Posts WHERE PostID = %s", [id])[0][0]
         image = base64.b64encode(open(IMAGE_DIR + url, 'rb').read())
         return image, 200
     except:
-        return "Invalid url", 400
+        return "Something went wrong...", 400
 
 @posts_api.route('/getPosts', methods=['GET'])
 def get_posts():

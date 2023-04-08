@@ -1,5 +1,6 @@
 import base64
 import io
+import json
 import os
 import uuid
 
@@ -116,6 +117,9 @@ def upload_post():
     '''Upload a post to the database and store the image in the file system'''
     # Grab the arguments provided in the request
     tags = request.form.getlist('tags[]')
+    if tags is [] and request.form.get('tags', None) is not None:
+        tags = json.loads(request.form.get('tags'))
+        
     user = request.form.get('user')
     latitude = request.form.get('latitude')
     longitude = request.form.get('longitude')
@@ -125,11 +129,17 @@ def upload_post():
         return INVALID_LOCATION, 400
 
     # Upload image to the storage folder
-    image_bytes = io.BytesIO(request.files.get('image').read())
+    if request.files.get('image') is not None:
+        image_bytes = request.files.get('image').read()
+    else:
+        image_bytes = base64.b64decode(request.form.get('image'))
 
-    image = Image.open(image_bytes)
+    if image_bytes is None:
+        return "No image provided", 400
+
     image_path = str(uuid.uuid4()) + ".png"
-    image.save(fp = IMAGE_DIR + image_path, format = "png")
+    with open(IMAGE_DIR + image_path, 'wb') as f:
+        f.write(image_bytes)
 
     # Send the post to the database using the uploadPost stored procedure
     tags = str_tags(tags)

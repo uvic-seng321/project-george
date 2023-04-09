@@ -1,6 +1,6 @@
-
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'backend.dart';
@@ -36,7 +36,8 @@ class _PostListState extends State<PostList> {
   }
 
   void _onScroll() {
-    if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange &&
         !_isLoadingMore) {
       setState(() {
@@ -58,76 +59,91 @@ class _PostListState extends State<PostList> {
   }
 
   void _filterPosts(String query) {
-
     setState(() {
       _filters.add(query);
     });
     page = 1;
+    mapOut = {};
+    _posts = [];
     _loadMorePosts();
+  }
 
+  Map<int, Image> mapOut = {};
+  Future<Map<int, Image>> imMap(List<Post> posts) async {
+    for (int i = 5*(page-1); i < posts.length; i++) {
+      if (posts.isEmpty) {
+        break;
+      }
+      mapOut[posts[i].id] = await getImage(posts[i].id);
+    }
+    return mapOut;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
           decoration: InputDecoration(
             labelText: 'Search',
             border: OutlineInputBorder(),
           ),
-            onSubmitted: (value) => _filterPosts(value),
-          ),
+          onSubmitted: (value) => _filterPosts(value),
         ),
-        SizedBox(
-          height: 100,
-            child: ListView.builder(
+      ),
+      SizedBox(
+        height: 100,
+        child: ListView.builder(
             itemCount: _filters.length,
             itemBuilder: (context, index) {
               final item = _filters[index];
               return ListTile(
                 title: Text(item),
               );
-            }
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
+            }),
+      ),
+      Expanded(
+        child: postList(),
+      )
+    ]);
+  }
+
+  Widget postList() {
+    return FutureBuilder(
+      future: imMap(_posts),
+      builder: (BuildContext context, AsyncSnapshot<Map<int, Image>> snapshot) {
+        return ListView.builder(
             controller: _scrollController,
-            itemCount: 1,//_posts.length + (_isLoadingMore ? 1 : 0),
+            itemCount: _posts.length + (_isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index == _posts.length) {
                 return const Center(child: CircularProgressIndicator());
               } else {
                 final post = _posts[index];
-                return postTile(post);
+                return ListTile(
+                  title: Text(post.id.toString()),
+                  subtitle: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: 0,
+                      minWidth: 0,
+                      maxHeight: 100000,
+                      maxWidth: 100000,
+                    ),
+                    child: test(snapshot, post),
+                  ),
+                );
               }
-            }
-          )
-        )
-      ]
+            });
+      },
     );
   }
 
-  Widget postTile(Post post) {
-    return FutureBuilder(
-      future: getImage(post.id),
-      builder: (BuildContext context, AsyncSnapshot<Image> snapshot) {
-        return ListTile(
-          title: Text(post.id.toString()),
-          leading: ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: 0,
-              minWidth: 0,
-              maxHeight: 100000,
-              maxWidth: 100000,
-            ),
-            child: snapshot.data,
-          ),
-        );
-      },
-    );
+  Image? test(snapshot, post) {
+    if (snapshot.hasData == true) {
+      return snapshot.data[post.id];
+    } else {
+      return null;
+    }
   }
 }

@@ -35,9 +35,10 @@ Future<Image> getImage(int postID) async {
       '162.156.55.214:5000', 'posts/getImage', {'id': postID.toString()});
   var response = await http.get(request);
   if (response.statusCode == 200) {
-    print("yes");
+    print("Yes ${postID}");
     return Image.memory(base64Decode(response.body));
   } else {
+    print("No ${postID}");
     throw Exception("Failed to get image");
   }
 }

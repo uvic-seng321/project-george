@@ -64,12 +64,12 @@ def get_image():
     if id is None:
         return "No id provided", 400
     
-    url = send_query("SELECT ImageURL FROM Posts WHERE PostID = %s", [id])[0][0]
     try:
+        url = send_query("SELECT ImageURL FROM Posts WHERE PostID = %s", [id])[0][0]
         image = base64.b64encode(open(IMAGE_DIR + url, 'rb').read())
         return image, 200
     except:
-        return "Invalid url", 400
+        return "Something went wrong...", 400
 
 @posts_api.route('/getPosts', methods=['GET'])
 def get_posts():
@@ -116,10 +116,11 @@ def get_posts():
 def upload_post():
     '''Upload a post to the database and store the image in the file system'''
     # Grab the arguments provided in the request
-    tags = request.form.getlist('tags[]')
-    if tags is [] and request.form.get('tags', None) is not None:
+    
+    if request.form.get('tags', None) is not None:
         tags = json.loads(request.form.get('tags'))
-        
+    else: 
+        tags = request.form.getlist('tags[]')
     user = request.form.get('user')
     latitude = request.form.get('latitude')
     longitude = request.form.get('longitude')

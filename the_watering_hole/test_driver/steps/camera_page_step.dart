@@ -1,4 +1,4 @@
-import 'package:flutter_driver/flutter_driver.dart' as driver;
+import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 // import 'package:flutter_test/flutter_test.dart';
 import 'package:gherkin/gherkin.dart';
@@ -12,7 +12,8 @@ class OnCameraPage extends GivenWithWorld<FlutterWorld> {
 
   @override
   Future<void> executeStep() async {
-    CameraPage page = CameraPage(world.driver!);
+    var driver = world.driver!;
+    CameraPage page = CameraPage(driver);
     var title = await page.getPageTitle();
     expectMatch(title, "Take a photo");
   }
@@ -42,7 +43,7 @@ class CheckCameraPreview extends ThenWithWorld<FlutterWorld> {
   Future<void> executeStep() async {
     expect(
         await FlutterDriverUtils.isPresent(
-            world.driver, driver.find.byValueKey("CameraPreview")),
+            world.driver, find.byValueKey("CameraPreview")),
         true);
   }
 

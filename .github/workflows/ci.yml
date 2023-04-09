@@ -6,7 +6,7 @@ on:
       # - main
   pull_request:
     branches:
-      # - main
+      - main
 
 # Flutter actions taken from https://github.com/subosito/flutter-action
 jobs:
@@ -53,7 +53,7 @@ jobs:
           target: ${{ matrix.target }}
           api-level: ${{ matrix.api-level }}
           arch: x86_64
-          profile: Nexus 6
+          profile: Pixel_3a_API_29
           script: flutter drive --target=test_driver/app.dart
 
 #   build-android:

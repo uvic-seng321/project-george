@@ -68,13 +68,15 @@ class TakePhotoScreenState extends State<TakePhotoScreen> {
     // camera preview. Use a FutureBuilder to display a loading spinner until the
     // controller has finished initializing.
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a photo')),
+      appBar: AppBar(
+          title: const Text('Take a photo', key: ValueKey("CameraPageText"))),
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
+            return CameraPreview(_controller,
+                key: const ValueKey("CameraPreview"));
           } else {
             // Otherwise, display a loading indicator.
             return const Center(child: CircularProgressIndicator());
@@ -82,6 +84,7 @@ class TakePhotoScreenState extends State<TakePhotoScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        key: const ValueKey("CameraButton"),
         // Provide an onPressed callback.
         onPressed: () async {
           // Take the Picture in a try / catch block. If anything goes wrong,

@@ -9,8 +9,8 @@ class CameraPage {
   CameraPage(this._driver);
 
   // Get the title of the page
-  Future<String> getPageTitle() async {
-    return await _driver.getText(find.byValueKey("CameraPageText"));
+  SerializableFinder getPage() {
+    return find.byValueKey("CameraPage");
   }
 
   // Get the camera preview

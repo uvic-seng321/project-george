@@ -14,8 +14,8 @@ class OnCameraPage extends GivenWithWorld<FlutterWorld> {
   Future<void> executeStep() async {
     var driver = world.driver!;
     CameraPage page = CameraPage(driver);
-    var title = await page.getPageTitle();
-    expectMatch(title, "Take a photo");
+    expect(
+        await FlutterDriverUtils.isPresent(world.driver, page.getPage()), true);
   }
 
   @override
@@ -34,19 +34,51 @@ class LookAtPage extends WhenWithWorld<FlutterWorld> {
   RegExp get pattern => RegExp(r"I look at the screen");
 }
 
-class CheckCameraPreview extends ThenWithWorld<FlutterWorld> {
+class CheckCameraPreview extends Then1WithWorld<String, FlutterWorld> {
   CheckCameraPreview()
       : super(StepDefinitionConfiguration()
           ..timeout = const Duration(seconds: 10));
 
   @override
-  Future<void> executeStep() async {
+  Future<void> executeStep(String component) async {
     expect(
         await FlutterDriverUtils.isPresent(
-            world.driver, find.byValueKey("CameraPreview")),
+            world.driver, find.byValueKey(component)),
         true);
   }
 
   @override
-  RegExp get pattern => RegExp(r"I should see a camera preview");
+  RegExp get pattern => RegExp(r"I should see a {string} component");
+}
+
+class ComponentIsShown extends When1WithWorld<String, FlutterWorld> {
+  ComponentIsShown()
+      : super(StepDefinitionConfiguration()
+          ..timeout = const Duration(seconds: 10));
+
+  @override
+  Future<void> executeStep(String component) async {
+    expect(
+        await FlutterDriverUtils.isPresent(
+            world.driver, find.byValueKey(component)),
+        true);
+  }
+
+  @override
+  RegExp get pattern => RegExp(r"the component {string} is shown ");
+}
+
+class ClickComponent extends Then1WithWorld<String, FlutterWorld> {
+  ClickComponent()
+      : super(StepDefinitionConfiguration()
+          ..timeout = const Duration(seconds: 10));
+
+  @override
+  Future<void> executeStep(String component) async {
+    await world.driver!.tap(find.byValueKey(component));
+  }
+
+  @override
+  RegExp get pattern =>
+      RegExp(r"I should be able to click the {string} button");
 }

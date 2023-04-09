@@ -57,7 +57,7 @@ Future<void> uploadPost(Post post) async {
       'latitude': post.latitude.toString(),
       'longitude': post.longitude.toString(),
       'user': '1', // TODO user id
-      'tags': jsonEncode(post.tags),
+      'tags[]': post.tags.first,
       'image': image,
     });
   var response = await request.send();

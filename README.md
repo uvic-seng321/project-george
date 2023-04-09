@@ -20,6 +20,8 @@ You will need to select the device you're using in your IDE. As well, you will l
 
 From here, you may following along with [the demo]() on your mobile device to see how to use the app. It should be quite straightforward, as there is a very limited functionality with only the MVP implemented.
 
+TODO talk about locally running tests
+
 # Links to Documentation
 
 [Data Flow Diagram](https://github.com/uvic-seng321/project-george/blob/5bb3e2ae5e0cb7c4bcf7e14bb03f7e6555b48b20/DFD.jpeg)

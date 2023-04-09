@@ -116,10 +116,11 @@ def get_posts():
 def upload_post():
     '''Upload a post to the database and store the image in the file system'''
     # Grab the arguments provided in the request
-    tags = request.form.getlist('tags[]')
-    if tags is [] and request.form.get('tags', None) is not None:
+    
+    if request.form.get('tags', None) is not None:
         tags = json.loads(request.form.get('tags'))
-        
+    else: 
+        tags = request.form.getlist('tags[]')
     user = request.form.get('user')
     latitude = request.form.get('latitude')
     longitude = request.form.get('longitude')

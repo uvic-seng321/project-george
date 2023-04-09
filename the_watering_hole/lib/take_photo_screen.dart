@@ -1,5 +1,7 @@
 import 'dart:io';
-import 'package:flutter/gestures.dart';
+import 'backend.dart';
+import 'main.dart';
+// import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
@@ -86,7 +88,7 @@ class TakePhotoScreenState extends State<TakePhotoScreen>{
                   // Provide an onPressed callback.
                   onPressed: () async {
                     await Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context)=> const ChoosePictureScreen(
+                        MaterialPageRoute(builder: (context)=> ChoosePictureScreen(
                           // Context needed for building page
                         )
                         )
@@ -138,7 +140,12 @@ class DisplayPictureScreen extends StatelessWidget{
   final String hintText2 = "Latitude";
   final String hintText3 = "Longitude";
 
-  const DisplayPictureScreen({
+  final latitude = TextEditingController();
+  final longitude = TextEditingController();
+  final tags = TextEditingController();
+  var img = null;
+
+   DisplayPictureScreen({
     super.key, required this.imagePath
     }
   );
@@ -152,6 +159,7 @@ class DisplayPictureScreen extends StatelessWidget{
         children: <Widget>[
           Image.file(File(imagePath)),
           TextField(
+            controller: tags,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               border: const UnderlineInputBorder(),
@@ -159,6 +167,7 @@ class DisplayPictureScreen extends StatelessWidget{
             ),
           ),
           TextField(
+            controller: latitude,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               border: const UnderlineInputBorder(),
@@ -166,11 +175,30 @@ class DisplayPictureScreen extends StatelessWidget{
             ),
           ),
           TextField(
+            controller: longitude,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               border: const UnderlineInputBorder(),
               labelText: hintText3,
             ),
+          ),
+          FloatingActionButton(
+            // Provide an onPressed callback.
+            onPressed: () async {
+              //send upload to backend
+              var tagsList = tags.text.split(',');
+              double lat = double.parse(latitude.text);
+              double long = double.parse(longitude.text);
+              img = File(imagePath);
+
+              if (img != null){
+                var post = Post(id: 1, tags: tagsList, latitude: lat, longitude: long);
+                post.imageFile = img;
+                uploadPost(post);
+                Navigator.pop(context);
+              }
+            },
+            child: const Icon(Icons.send),
           ),
         ],
       ),
@@ -178,7 +206,7 @@ class DisplayPictureScreen extends StatelessWidget{
   }
 }
 
-_getFromGallery() async{
+Future<File?> _getFromGallery() async{
   XFile? pickedFile = await ImagePicker().pickImage(
     source: ImageSource.gallery,
   );
@@ -186,11 +214,13 @@ _getFromGallery() async{
     File imageFile = File(pickedFile.path);
     return (imageFile);
   }
+  return null;
 }
+
 
 class ChoosePictureScreen extends StatelessWidget{
 
-  const ChoosePictureScreen({
+   ChoosePictureScreen({
     super.key,
     }
     );
@@ -199,6 +229,10 @@ class ChoosePictureScreen extends StatelessWidget{
   final String hintText2 = "Latitude";
   final String hintText3 = "Longitude";
 
+  final latitude = TextEditingController();
+  final longitude = TextEditingController();
+  final tags = TextEditingController();
+  File? img = null;
 
   @override
   Widget build(BuildContext context) {
@@ -208,25 +242,31 @@ class ChoosePictureScreen extends StatelessWidget{
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             TextField(
+              controller: tags,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 border: const UnderlineInputBorder(),
                 labelText: hintText1,
               ),
+
             ),
             TextField(
+              controller: latitude,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 border:const UnderlineInputBorder(),
                 labelText: hintText2,
               ),
+
             ),
             TextField(
+              controller: longitude,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 border: const UnderlineInputBorder(),
                 labelText: hintText3,
               ),
+
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -234,7 +274,7 @@ class ChoosePictureScreen extends StatelessWidget{
                   FloatingActionButton(
                     // Provide an onPressed callback.
                     onPressed: () async {
-                      _getFromGallery();
+                      img = await _getFromGallery();
                     },
                      child: const Icon(Icons.image),
                   ),
@@ -242,6 +282,16 @@ class ChoosePictureScreen extends StatelessWidget{
                     // Provide an onPressed callback.
                     onPressed: () async {
                       //send upload to backend
+                      var tagsList = tags.text.split(',');
+                      double lat = double.parse(latitude.text);
+                      double long = double.parse(longitude.text);
+
+                      if (img != null){
+                        var post = Post(id: 1, tags: tagsList, latitude: lat, longitude: long);
+                        post.imageFile = img;
+                        uploadPost(post);
+                        Navigator.pop(context);
+                      }
                     },
                     child: const Icon(Icons.send),
                   ),
@@ -250,3 +300,4 @@ class ChoosePictureScreen extends StatelessWidget{
     );
   }
 }
+

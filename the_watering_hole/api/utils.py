@@ -3,7 +3,7 @@ from db import get_db
 db = get_db()
 
 def send_query(query, args):
-    db.reconnect()
+    db.reconnect(delay=1, attempts=5)
     cur = db.cursor()
     cur.execute(query, args)
     result = cur.fetchall()

@@ -14,7 +14,13 @@ class Post {
   int? poster;
   int? views;
 
-  Post(this.id, this.tags, this.latitude, this.longitude,
+  Post(
+      {required this.id,
+      required this.tags,
+      required this.latitude,
+      required this.longitude});
+
+  Post.all(this.id, this.tags, this.latitude, this.longitude,
       [this.imageFile, this.date, this.poster, this.views]);
 
   @override
@@ -29,8 +35,10 @@ Future<Image> getImage(int postID) async {
       '162.156.55.214:5000', 'posts/getImage', {'id': postID.toString()});
   var response = await http.get(request);
   if (response.statusCode == 200) {
+    print("Yes ${postID}");
     return Image.memory(base64Decode(response.body));
   } else {
+    print("No ${postID}");
     throw Exception("Failed to get image");
   }
 }
@@ -49,7 +57,7 @@ Future<void> uploadPost(Post post) async {
       'latitude': post.latitude.toString(),
       'longitude': post.longitude.toString(),
       'user': '1', // TODO user id
-      'tags': jsonEncode(post.tags),
+      'tags[]': post.tags.first,
       'image': image,
     });
   var response = await request.send();
@@ -65,15 +73,15 @@ Future<void> uploadPost(Post post) async {
 Future<List<Post>> getPosts(
     {int? pageNum,
     List<String>? tags,
-    Float? latitude,
-    Float? longitude,
-    Float? radius}) async {
+    double? latitude,
+    double? longitude,
+    double? radius}) async {
   var queryParams = {
     "tags": tags,
     "latitude": latitude,
     "longitude": longitude,
     "radius": radius,
-    "pageNum": pageNum,
+    "pageNum": pageNum.toString(),
   }..removeWhere((_, value) => value == null);
   var url = Uri.http('162.156.55.214:5000', '/posts/getPosts', queryParams);
   var response = await http.get(url);
@@ -81,7 +89,7 @@ Future<List<Post>> getPosts(
     var json = jsonDecode(response.body);
     List<Post> posts = <Post>[];
     for (var v in json) {
-      posts.add(Post(
+      posts.add(Post.all(
           v["id"],
           [],
           v["latitude"],

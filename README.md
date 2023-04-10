@@ -9,7 +9,7 @@ Welcome to The Watering Hole! This is a social media application for posting pic
 TODO explain where the frontend code is, where the backend code is, where the tests are, etc
 Frontend code is located here:
 
-[project-george/the_watering_hole/lib/](https://drive.google.com/file/d/1cukv0qmRoNZ2XMyCB1G1QqzbzaIx5Nht/view?usp=sharing)
+https://drive.google.com/file/d/1cukv0qmRoNZ2XMyCB1G1QqzbzaIx5Nht/view?usp=sharing
 
 Backend code is located here:
 

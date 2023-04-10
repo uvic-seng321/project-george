@@ -30,7 +30,9 @@ https://drive.google.com/file/d/106LxHjkCByt3UU1Tqo-j92Haji-VlwD3/view?usp=share
 
 ## Running the application
 
-This is a mobile application, and thus a mobile device or emulator is required to run this application. It will be difficult to run this application locally, as it involves installing lots of software. If the steps for running the application are too difficult, we have provided [a demo of the project](https://drive.google.com/file/d/1cukv0qmRoNZ2XMyCB1G1QqzbzaIx5Nht/view?usp=sharing). This demo shows all currently implemented functionality of the application.
+This is a mobile application, and thus a mobile device or emulator is required to run this application. It will be difficult to run this application locally, as it involves installing lots of software. If the steps for running the application are too difficult, we have provided [a demo of the project](https://drive.google.com/file/d/1cukv0qmRoNZ2XMyCB1G1QqzbzaIx5Nht/view?usp=sharing). This demo shows all currently implemented functionality of the application. 
+
+One important side note is that the frontend of the application relies heavily on the backend. When you upload a post, a call to the backend is made, resulting in data being stored in a database and images being stored on a server PC. When you view the "image feed", you are making constant GET requests to the backend to receive image data based on your filters with the search bar. Because the backend is not constantly running, you will not be able to test these main features. Thus, it's recommended to simply watch the demo of the application to understand the implemented functionality.
 
 ### Setting up the project
 

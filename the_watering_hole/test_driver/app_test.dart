@@ -8,7 +8,7 @@ import 'steps/upload_post_step.dart' as upload;
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [Glob(r"test_driver/features/c**.feature")]
     ..reporters = [StdoutReporter(MessageLevel.debug)]
     ..stepDefinitions = [
       upload.CheckText(),

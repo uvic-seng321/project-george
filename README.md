@@ -8,7 +8,7 @@ Welcome to The Watering Hole! This is a social media application for posting pic
 
 Frontend code is located here:
 
-https://drive.google.com/file/d/1cukv0qmRoNZ2XMyCB1G1QqzbzaIx5Nht/view?usp=sharing
+https://github.com/uvic-seng321/project-george/tree/main/the_watering_hole/lib
 
 Backend code is located here:
 
@@ -20,7 +20,8 @@ TODO TEST VIDEO
 
 ## Running the application
 
-This is a mobile application, and thus a mobile device or emulator is required to run this application. It will be difficult to run this application locally, as it involves installing lots of software. If the steps for running the application are too difficult, we have provided [a demo of the project](). This demo shows all currently implemented functionality of the application.
+This is a mobile application, and thus a mobile device or emulator is required to run this application. It will be difficult to run this application locally, as it involves installing lots of software. If the steps for running the application are too difficult, we have provided [a demo of the project](
+https://drive.google.com/file/d/1cukv0qmRoNZ2XMyCB1G1QqzbzaIx5Nht/view?usp=sharing). This demo shows all currently implemented functionality of the application.
 
 ### Setting up the project
 
@@ -36,7 +37,8 @@ You will need to select the device you're using in your IDE. As well, you will l
 
 ### Making your way around the app
 
-From here, you may following along with [the demo]() on your mobile device to see how to use the app. It should be quite straightforward, as there is a very limited functionality with only the MVP implemented.
+From here, you may following along with [the demo](
+https://drive.google.com/file/d/1cukv0qmRoNZ2XMyCB1G1QqzbzaIx5Nht/view?usp=sharing) on your mobile device to see how to use the app. It should be quite straightforward, as there is a very limited functionality with only the MVP implemented.
 
 ### Running tests
 

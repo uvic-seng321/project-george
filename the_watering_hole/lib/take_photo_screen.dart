@@ -89,6 +89,7 @@ class TakePhotoScreenState extends State<TakePhotoScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               FloatingActionButton(
+                key: const ValueKey("UploadImage"),
                 // Provide an onPressed callback.
                 onPressed: () async {
                   await Navigator.of(context).push(MaterialPageRoute(
@@ -99,6 +100,7 @@ class TakePhotoScreenState extends State<TakePhotoScreen> {
                 child: const Icon(Icons.image),
               ),
               FloatingActionButton(
+                key: const ValueKey("TakePicture"),
                 // Provide an onPressed callback.
                 onPressed: () async {
                   // Take the Picture in a try / catch block. If anything goes wrong,
@@ -195,6 +197,7 @@ class DisplayPictureScreen extends StatelessWidget {
         children: <Widget>[
           Image.file(File(imagePath)),
           TextField(
+            key: const ValueKey("TagInput"),
             controller: tags,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
@@ -203,6 +206,7 @@ class DisplayPictureScreen extends StatelessWidget {
             ),
           ),
           TextField(
+            key: const ValueKey("LatitudeInput"),
             controller: latitude,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -211,6 +215,7 @@ class DisplayPictureScreen extends StatelessWidget {
             ),
           ),
           TextField(
+            key: const ValueKey("LongitudeInput"),
             controller: longitude,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(

@@ -8,6 +8,7 @@ on:
     branches:
       - main
 
+# Run flask backend tests
 jobs:
   api:
     name: Test the Flask API

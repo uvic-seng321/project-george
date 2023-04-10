@@ -7,20 +7,12 @@ Feature: Uploading a post
 
     Scenario: Entering location
         Given I am on the upload page
-        When I enter <Longitude> in the "LongitudeInput" field
-        When I enter <Latitude> in the "LatitudeInput" field
-        Then the "LongitudeInput" field should contain <Longitude> 
-        Then the "LatitudeInput" field should contain <Latitude>
-        Examples:
-            | Longitude | Latitude |
-            | 0         | 0        |
-            | 1         | 1        |
+        When I enter "1" in the "LongitudeInput" field
+        When I enter "0" in the "LatitudeInput" field
+        Then the "LongitudeInput" field should contain "1"
+        Then the "LatitudeInput" field should contain "0"
     
     Scenario: Entering tags
         Given I am on the upload page
-        When I enter <Tag> in the "TagInput" field
-        Then the "TagInput" field should contain <Tag>
-        Examples:
-            | Tag |
-            | a   |
-            | b   |
+        When I enter "a" in the "TagInput" field
+        Then the "TagInput" field should contain "a"

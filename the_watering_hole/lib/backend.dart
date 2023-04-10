@@ -36,7 +36,8 @@ Future<Image> getImage(int postID) async {
   var response = await http.get(request);
   if (response.statusCode == 200) {
     print("Yes ${postID}");
-    return Image.memory(base64Decode(response.body));
+    return Image.memory(base64Decode(response.body),
+        key: const ValueKey('image'));
   } else {
     print("No ${postID}");
     throw Exception("Failed to get image");

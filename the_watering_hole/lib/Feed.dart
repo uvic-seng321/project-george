@@ -70,7 +70,7 @@ class _PostListState extends State<PostList> {
 
   Map<int, Image> mapOut = {};
   Future<Map<int, Image>> imMap(List<Post> posts) async {
-    for (int i = 5*(page-1); i < posts.length; i++) {
+    for (int i = 5 * (page - 1); i < posts.length; i++) {
       if (posts.isEmpty) {
         break;
       }
@@ -85,7 +85,8 @@ class _PostListState extends State<PostList> {
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(
-          decoration: InputDecoration(
+          key: const ValueKey('SearchBar'),
+          decoration: const InputDecoration(
             labelText: 'Search',
             border: OutlineInputBorder(),
           ),
@@ -93,6 +94,7 @@ class _PostListState extends State<PostList> {
         ),
       ),
       SizedBox(
+        key: const ValueKey("Feed"),
         height: 100,
         child: ListView.builder(
             itemCount: _filters.length,

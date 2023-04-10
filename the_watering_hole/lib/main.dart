@@ -33,7 +33,6 @@ class TabBar1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -42,14 +41,18 @@ class TabBar1 extends StatelessWidget {
             bottom: const TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.camera_alt)),
-                Tab(icon: Icon(Icons.dynamic_feed)),
+                Tab(
+                    icon: Icon(Icons.dynamic_feed),
+                    key: ValueKey("FeedViewButton")),
               ],
             ),
           ),
           body: TabBarView(
             children: [
-              TakePhotoScreen(camera: firstCamera,),
-              PostList(),
+              TakePhotoScreen(
+                camera: firstCamera,
+              ),
+              const PostList(key: ValueKey("FeedView")),
             ],
           ),
         ),

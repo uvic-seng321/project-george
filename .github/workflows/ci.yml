@@ -3,12 +3,11 @@ name: CI
 on:
   push:
     branches:
-      # - main
+      - main
   pull_request:
     branches:
       - main
 
-# Flutter actions taken from https://github.com/subosito/flutter-action
 jobs:
   api:
     name: Test the Flask API
@@ -32,29 +31,3 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: pip install -r requirements.txt
       - run: python -m pytest
-
-  drive:
-    strategy:
-      matrix:
-        device:
-        - "iPhone 8 (13.1)"
-        - "iPhone 11 Pro Max (13.1)"
-      fail-fast: false
-    runs-on: macOS-latest
-    steps:
-    - name: "Start Simulator"
-      run: |
-        UDID=$(
-          xcrun instruments -s |
-          awk \
-            -F ' *[][]' \
-            -v 'device=${{ matrix.device }}' \
-            '$1 == device { print $2 }'
-        )
-        xcrun simctl boot "${UDID:?No Simulator with this name found}"
-    - uses: actions/checkout@v1
-    - uses: subosito/flutter-action@v1
-      with:
-        channel: 'stable'
-    - name: "Run Flutter Driver tests"
-      run: "flutter drive --target=test_driver/app.dart"

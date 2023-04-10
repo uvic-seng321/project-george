@@ -12,7 +12,8 @@ class UploadPage {
 
   Future<void> enterText(String component, String value) async {
     await _driver.tap(find.byValueKey(component));
-    return await _driver.enterText(value);
+    await _driver.enterText(value);
+    await _driver.waitFor(find.text(value));
   }
 
   Future<bool> textIsPresent(String component, String value) async {

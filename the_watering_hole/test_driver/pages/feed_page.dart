@@ -7,16 +7,22 @@ class FeedPage {
 
   // Get the title of the page
   SerializableFinder getPage() {
-    return find.byValueKey("UploadPage");
+    return find.byValueKey("FeedPage");
   }
 
-  Future<void> enterText(String component, String value) async {
-    await _driver.tap(find.byValueKey(component));
-    return await _driver.enterText(value);
+  SerializableFinder findAnyImage() {
+    return find.byValueKey("image");
   }
 
-  Future<bool> textIsPresent(String component, String value) async {
-    var text = await _driver.getText(find.byValueKey(component));
-    return text == value;
+  // Scroll down the page
+  Future<void> scrollDown(double units) async {
+    return await _driver.scroll(find.byValueKey("FeedPage"), 0, units,
+        const Duration(milliseconds: 500));
+  }
+
+  // Search for a post by tag
+  Future<void> search(String value) async {
+    await _driver.tap(find.byValueKey("SearchBar"));
+    await _driver.enterText(value);
   }
 }

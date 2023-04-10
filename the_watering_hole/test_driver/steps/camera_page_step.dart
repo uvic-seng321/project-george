@@ -65,7 +65,7 @@ class ComponentIsShown extends When1WithWorld<String, FlutterWorld> {
   }
 
   @override
-  RegExp get pattern => RegExp(r"the component {string} is shown ");
+  RegExp get pattern => RegExp(r"the component {string} is shown");
 }
 
 class ClickComponent extends Then1WithWorld<String, FlutterWorld> {

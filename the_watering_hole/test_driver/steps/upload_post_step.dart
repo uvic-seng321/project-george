@@ -1,6 +1,6 @@
 import 'package:flutter_driver/flutter_driver.dart' as driver;
 import 'package:flutter_gherkin/flutter_gherkin.dart';
-import 'package:flutter_test/flutter_test.dart';
+// import 'package:flutter_test/flutter_test.dart';
 // import 'package:flutter_test/flutter_test.dart';
 import 'package:gherkin/gherkin.dart';
 
@@ -76,13 +76,13 @@ class EnterText extends When2WithWorld<String, String, FlutterWorld> {
           ..timeout = const Duration(seconds: 10));
 
   @override
-  Future<void> executeStep(String component, String value) async {
+  Future<void> executeStep(String value, String component) async {
     UploadPage page = UploadPage(world.driver!);
     await page.enterText(component, value);
   }
 
   @override
-  RegExp get pattern => RegExp(r"I enter {string} into the {string} field");
+  RegExp get pattern => RegExp(r"I enter {string} in the {string} field");
 }
 
 class CheckText extends Then2WithWorld<String, String, FlutterWorld> {
